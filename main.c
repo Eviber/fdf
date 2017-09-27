@@ -6,17 +6,23 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/26 00:07:45 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/27 22:52:15 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibx_macos/mlx.h"
 
-typedef struct	s_pos
+typedef struct	s_point
 {
 	int			x;
 	int			y;
-}				t_pos;
+}				t_point;
+
+typedef struct	s_line
+{
+	t_point		a;
+	t_point		b;
+}				t_line;
 
 typedef struct	s_mlxdata
 {
@@ -29,29 +35,54 @@ typedef struct	s_mlxdata
 	int				endian;
 }				t_mlxdata;
 
-void		imgputpixel(t_mlxdata dt, t_pos pos, unsigned int color)
+void		imgputpixel(t_mlxdata dt, t_point pos, unsigned int color)
 {
 	unsigned int	*addr;
 
-	addr = (unsigned int *)(dt.img + (dt.sizeline * pos.x) + (pos.y * dt.bpp));
-	*addr = color;
+	addr = (unsigned int *)(dt.img + (dt.sizeline * pos.y) + (pos.x * dt.bpp));
+	if (pos.x < 640 && pos.y < 480)
+		*addr = color;
+}
+
+void		drawline(t_mlxdata data, t_line ln, unsigned int color)
+{
+	t_point	d;
+	t_point	s;
+	int		err;
+	int		tmp;
+
+	d.x = (ln.a.x > ln.b.x) ? ln.a.x - ln.b.x : ln.b.x - ln.a.x;
+	d.y = (ln.a.y > ln.b.y) ? ln.a.y - ln.b.y : ln.b.y - ln.a.y;
+	s.x = (ln.a.x < ln.b.x) ? 1 : -1;
+	s.y = (ln.a.y < ln.b.y) ? 1 : -1;
+	err = (d.x > d.y ? d.x : -(d.y))/2;
+	while (!(ln.a.x == ln.b.x && ln.a.y == ln.b.y))
+	{
+		imgputpixel(data, ln.a, color);
+		tmp = err;
+		err -= (tmp > -d.x) ? d.y : 0;
+		err += (tmp < d.y) ? d.x : 0;
+		ln.a.x += (tmp > -d.x) ? s.x : 0;
+		ln.a.y += (tmp < d.y) ? s.y : 0;
+	}
+	imgputpixel(data, ln.a, color);
 }
 
 void		draw(t_mlxdata data)
 {
-	t_pos	pos;
+	t_line	line;
 
-	pos.x = 0;
-	pos.y = 0;
-	while (pos.x < 480)
+	line.a.x = 0;
+	line.a.y = 0;
+	line.b.x = 640;
+	line.b.y = 0;
+	drawline(data, line, 0x00CCCCFF);
+	while (line.a.y < 480)
 	{
-		pos.y = 0;
-		while (pos.y < 640)
-		{
-			imgputpixel(data, pos, 0x00ffffff);
-			pos.y += 20;
-		}
-		pos.x += 20;
+		line.b.y = line.a.y;
+		drawfatline(10, data, line, 0x00CCCCFF);
+		drawline(data, line, 0x00FF0000);
+		line.a.y += 20;
 	}
 }
 
@@ -68,7 +99,7 @@ int			main(int argc, char **argv)
 	data.img = mlx_get_data_addr(data.imgptr, &(data.bpp), &(data.sizeline), &(data.endian));
 	data.bpp /= 8;
 	draw(data);
-	mlx_put_image_to_window(data.mlx, data.win, data.imgptr, -15, -15);
+	mlx_put_image_to_window(data.mlx, data.win, data.imgptr, 0, 0);
 	mlx_loop(data.mlx);
 	return (0);
 }
