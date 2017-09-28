@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 16:37:47 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 21:43:11 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,33 +82,45 @@ t_wu		endpoint2(t_wu wu, t_point b, unsigned int color)
 	return (wu);
 }
 
-void		wu_loop(t_wu wu, unsigned int color)
+void		wu_loop(t_wu wu, unsigned int fromcolor, unsigned int tocolor)
 {
-	if (wu.steep)
+	t_color	cur;
+	t_color	d;
+
+	ft_memset(&cur, 0, sizeof(t_color));
+	d = setcolors(wu, fromcolor, tocolor);
+	while (++wu.pxstart.x < wu.pxend.x - 1)
 	{
-		while (++wu.pxstart.x < wu.pxend.x - 1)
-		{
+		if (wu.steep)
 			imgputpixel(floor(wu.intery), wu.pxstart.x,
-						setal(rfpart(wu.intery), color));
+						setal(rfpart(wu.intery), fromcolor));
+		if (wu.steep)
 			imgputpixel(floor(wu.intery) + 1, wu.pxstart.x,
-						setal(fpart(wu.intery), color));
-			wu.intery += wu.gradient;
-		}
-	}
-	else
-	{
-		while (++wu.pxstart.x < wu.pxend.x - 1)
-		{
+						setal(fpart(wu.intery), fromcolor));
+		if (!wu.steep)
 			imgputpixel(wu.pxstart.x, floor(wu.intery),
-						setal(rfpart(wu.intery), color));
+						setal(rfpart(wu.intery), fromcolor));
+		if (!wu.steep)
 			imgputpixel(wu.pxstart.x, floor(wu.intery) + 1,
-						setal(fpart(wu.intery), color));
-			wu.intery += wu.gradient;
-		}
+						setal(fpart(wu.intery), fromcolor));
+		wu.intery += wu.gradient;
+		cur = addcolors(cur, d.r, d.g, d.b);
+		fromcolor += ((int)round(cur.r) << 16) + ((int)round(cur.g) << 8) +
+						round(cur.b);
+		cur = addcolors(cur, -round(cur.r), -round(cur.g), -round(cur.b));
 	}
 }
 
-void		drawline(t_point a, t_point b, unsigned int color)
+void		ft_uiswap(unsigned int *a, unsigned int *b)
+{
+	unsigned int	c;
+
+	c = *a;
+	*a = *b;
+	*b = c;
+}
+
+void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 {
 	t_wu	wu;
 
@@ -122,9 +134,10 @@ void		drawline(t_point a, t_point b, unsigned int color)
 	{
 		ft_fswap(&a.x, &b.x);
 		ft_fswap(&a.y, &b.y);
+		ft_uiswap(&scol, &ecol);
 	}
 	wu.gradient = (b.x - a.x == 0.0) ? 1.0 : (b.y - a.y) / (b.x - a.x);
-	wu = endpoint1(wu, a, color);
-	wu = endpoint2(wu, b, color);
-	wu_loop(wu, color);
+	wu = endpoint1(wu, a, scol);
+	wu = endpoint2(wu, b, ecol);
+	wu_loop(wu, scol, ecol);
 }

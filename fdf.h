@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 17:15:45 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 21:27:31 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,20 @@ typedef struct	s_mlxdata {
 
 typedef struct	s_wu
 {
-	double	gradient;
-	t_point	end;
-	t_point	pxstart;
-	t_point	pxend;
-	double	intery;
-	int		steep;
+	double		gradient;
+	t_point		end;
+	t_point		pxstart;
+	t_point		pxend;
+	double		intery;
+	int			steep;
 }				t_wu;
+
+typedef struct	s_color
+{
+	double		r;
+	double		g;
+	double		b;
+}				t_color;
 
 t_mlxdata		*getmlxdata(char *name);
 
@@ -55,7 +62,10 @@ void			ft_fswap(double *a, double *b);
 double			fpart(double n);
 double			rfpart(double n);
 unsigned int	setal(float a, unsigned int rgb);
+t_color			addcolors(t_color a, double r, double g, double b);
+t_color			setcolors(t_wu wu, unsigned int from, unsigned int to);
 
-void			drawline(t_point a, t_point b, unsigned int color);
+void			drawline(t_point a, t_point b, unsigned int scol,
+															unsigned int ecol);
 
 #endif

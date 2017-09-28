@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 17:22:44 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 21:47:02 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,33 @@ void		update(void)
 void		draw(void)
 {
 	t_line	line;
-	int		i;
+	double	i;
 
-	i = 0;
-	while (i++ < 200)
+	i= 0;
+	line.a.x = WIN_W / 2;
+	line.a.y = WIN_H / 2;
+	while (i < WIN_H)
 	{
-//		update();
-		line.a.x = rand() % WIN_W;
-		line.a.y = rand() % WIN_H;
-		line.b.x = rand() % WIN_W;
-		line.b.y = rand() % WIN_H;
-		drawline(line.a, line.b, (rand() % 0x01000000));
+		line.b.x = 0;
+		line.b.y = i;
+		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
+		line.b.x = WIN_W;
+		line.b.y = i;
+		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
+		i += WIN_H / 50;
+		update();
+	}
+	i = 0;
+	while (i < WIN_W)
+	{
+		line.b.x = i;
+		line.b.y = 0;
+		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
+		line.b.x = i;
+		line.b.y = WIN_H;
+		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
+		i += WIN_W / 50;
+		update();
 	}
 }
 
@@ -79,7 +95,7 @@ int			main(int argc, char **argv)
 	i = 0;
 	ptr = (int *)(data->img);
 	while (i < data->sizeline * WIN_H / 4)
-		ptr[i++] = 0x00000000;
+		ptr[i++] = 0x00FFFFFF;
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	draw();
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
