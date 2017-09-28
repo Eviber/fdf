@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 00:12:24 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 06:19:01 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,24 @@ typedef struct	s_mlxdata
 	int				endian;
 }				t_mlxdata;
 
-void		imgputpixel(t_mlxdata dt, t_point pos, unsigned int color)
+typedef struct	s_wu
 {
+	double	gradient;
+	t_point	end;
+	t_point	pxstart;
+	t_point	pxend;
+	double	intery;
+	int		steep;
+}				t_wu;
+
+void		imgputpixel(int x, int y, unsigned int color)
+{
+	t_mlxdata	dt;
 	unsigned int	*addr;
 
-	addr = (unsigned int *)(dt.img + (dt.sizeline * pos.y) + (pos.x * dt.bpp));
-	if (pos.x < 640 && pos.y < 480)
+	dt = getmlxdata(NULL);
+	addr = (unsigned int *)(dt.img + (dt.sizeline * y) + (x * dt.bpp));
+	if (x < 640 && y < 480)
 		*addr = color;
 }
 
@@ -63,80 +75,75 @@ double		rfpart(double n)
 {
 	return (1 - fpart(n));
 }
-
-void		drawline(t_mlxdata data, double x0, double y0, double x1, double y1, unsigned int color)
+/*
+void		drawline_(t_mlxdata data, t_point a, t_point b, unsigned int color)
 {
 	double	gradient;
-	double	dx;
-	double	dy;
-	double	xend;
-	double	yend;
-	double	xpx11;
-	double	ypx11;
-	double	xpx12;
-	double	ypx12;
+	t_point	diff;
+	t_point	end;
+	t_point	pxstart;
+	t_point	pxend;
 	double	intery;
-	double	x;
 	float	xgap;
 	int		steep;
 
-	steep = (fabs(y1 - y0) > fabs(x1 - x0));
+	steep = (fabs(b.y - a.y) > fabs(b.x - a.x));
 	if (steep)
 	{
-		ft_fswap(&x0, &y0);
-		ft_fswap(&x1, &y1);
+		ft_fswap(&a.x, &a.y);
+		ft_fswap(&b.x, &b.y);
 	}
-	if (x0 > x1)
+	if (a.x > b.x)
 	{
-		ft_fswap(&x0, &x1);
-		ft_fswap(&y0, &y1);
+		ft_fswap(&a.x, &b.x);
+		ft_fswap(&a.y, &b.y);
 	}
 
-	dx = x1 - x0;
-	dy = y1 - y0;
-	gradient = dy / dx;
-	if (dx == 0.0)
+	d.x = b.x - a.x;
+	d.y = b.y - a.y;
+	gradient = d.y / d.x;
+	if (d.x == 0.0)
 		gradient = 1.0;
 
 // handle first endpoint
-	xend = floor(x0) + 0.5;
-	yend = y0 + gradient * (xend - x0);
-	xgap = rfpart(x0 + 0.5);
-	xpx11 = xend;
-	ypx11 = floor(yend);
+	end.x = floor(a.x) + 0.5;
+	end.y = a.y + gradient * (end.x - a.x);
+	xgap = rfpart(a.x + 0.5);
+	pxstart.x = end.x;
+	pxstart.y = floor(end.y);
 	if (steep)
 	{
-		plot(ypx11, xpx11, rfpart(yend) * xgap);
-		plot(ypx11 + 1, xpx11, fpart(yend) * xgap);
+		plot(pxstart.y, pxstart.x, rfpart(end.y) * xgap);
+		plot(pxstart.y + 1, pxstart.x, fpart(end.y) * xgap);
 	}
 	else
 	{
-		plot(xpx11, ypx11, rfpart(yend) * xgap);
-		plot(xpx11, ypx11 + 1, fpart(yend) * xgap);
+		plot(pxstart.x, pxstart.y, rfpart(end.y) * xgap);
+		plot(pxstart.x, pxstart.y + 1, fpart(end.y) * xgap);
 	}
-	intery = yend + gradient;
+	intery = end.y + gradient;
 
 // handle second endpoint
-	xend = floor(x1) + 0.5;
-	yend = y1 + gradient * (xend - x1);
-	xgap = fpart(x1 + 0.5);
-	xpx12 = xend;
-	ypx12 = floor(yend);
+	end.x = floor(b.x) + 0.5;
+	end.y = b.y + gradient * (end.x - b.x);
+	xgap = fpart(b.x + 0.5);
+	pxend.x = end.x;
+	pxend.y = floor(end.y);
 	if (steep)
 	{
-		plot(ypx12, xpx12, rfpart(yend) * xgap);
-		plot(ypx12 + 1, xpx12, fpart(yend) * xgap);
+		plot(pxend.y, pxend.x, rfpart(end.y) * xgap);
+		plot(pxend.y + 1, pxend.x, fpart(end.y) * xgap);
 	}
 	else
 	{
-		plot(xpx12, ypx12, rfpart(yend) * xgap);
-		plot(xpx12, ypx12 + 1, fpart(yend) * xgap);
+		plot(pxend.x, pxend.y, rfpart(end.y) * xgap);
+		plot(pxend.x, pxend.y + 1, fpart(end.y) * xgap);
 	}
 
 // main loop
 	if (steep)
 	{
-		for (x = xpx11 + 1 ; x < xpx12 - 1 ; x++)
+		for (x = pxstart.x + 1 ; x < pxend.x - 1 ; x++)
 		{
 			plot(floor(intery), x, rfpart(intery));
 			plot(floor(intery) + 1, x, fpart(intery));
@@ -145,11 +152,101 @@ void		drawline(t_mlxdata data, double x0, double y0, double x1, double y1, unsig
 	}
 	else
 	{
-		for (x = xpx11 + 1 ; x < xpx12 - 1 ; x++)
+		for (x = pxstart.x + 1 ; x < pxend.x - 1 ; x++)
 		{
 			plot(x, floor(intery), rfpart(intery));
 			plot(x, floor(intery) + 1, fpart(intery));
 			intery += gradient;
 		}
 	}
+}
+*/
+
+unsigned int	setal(float a, unsigned int rgb)
+{
+	return ((((char)round(a * 255)) << 24) + rgb);
+}
+
+t_wu		endpoints(t_wu wu, t_point a, t_point b, unsigned int color)
+{
+	t_point	end;
+	float	xgap;
+
+// handle first endpoint
+	end.x = floor(a.x) + 0.5;
+	end.y = a.y + wu.gradient * (end.x - a.x);
+	xgap = rfpart(a.x + 0.5);
+	wu.pxstart.x = end.x;
+	wu.pxstart.y = floor(end.y);
+	if (wu.steep)
+	{
+		imgputpixel(wu.pxstart.y, wu.pxstart.x, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.y + 1, wu.pxstart.x, setal(fpart(end.y) * xgap, color));
+	}
+	else
+	{
+		imgputpixel(wu.pxstart.x, wu.pxstart.y, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.x, wu.pxstart.y + 1, setal(fpart(end.y) * xgap, color));
+	}
+	wu.intery = end.y + wu.gradient;
+
+// handle second endpoint
+	end.x = floor(b.x) + 0.5;
+	end.y = b.y + wu.gradient * (end.x - b.x);
+	xgap = fpart(b.x + 0.5);
+	wu.pxend.x = end.x;
+	wu.pxend.y = floor(end.y);
+	if (wu.steep)
+	{
+		imgputpixel(wu.pxend.y, wu.pxend.x, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.y + 1, wu.pxend.x, setal(fpart(end.y) * xgap, color));
+	}
+	else
+	{
+		imgputpixel(wu.pxend.x, wu.pxend.y, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.x, wu.pxend.y + 1, setal(fpart(end.y) * xgap, color));
+	}
+	return (wu);
+}
+
+void		wu_loop(t_wu wu, unsigned int color)
+{
+	if (wu.steep)
+	{
+		while (++wu.pxstart.x < wu.pxend.x - 1)
+		{
+			imgputpixel(floor(wu.intery), wu.pxstart.x, setal(rfpart(wu.intery), color));
+			imgputpixel(floor(wu.intery) + 1, wu.pxstart.x, setal(fpart(wu.intery), color));
+			wu.intery += wu.gradient;
+		}
+	}
+	else
+	{
+		while (++wu.pxstart.x < wu.pxend.x - 1)
+		{
+			imgputpixel(wu.pxstart.x, floor(wu.intery), setal(rfpart(wu.intery), color));
+			imgputpixel(wu.pxstart.x, floor(wu.intery) + 1, setal(fpart(wu.intery), color));
+			wu.intery += wu.gradient;
+		}
+	}
+}
+
+void		drawline_(t_point a, t_point b, unsigned int color)
+{
+	t_wu	wu;
+
+	wu.steep = (fabs(b.y - a.y) > fabs(b.x - a.x));
+	if (wu.steep)
+	{
+		ft_fswap(&a.x, &a.y);
+		ft_fswap(&b.x, &b.y);
+	}
+	if (a.x > b.x)
+	{
+		ft_fswap(&a.x, &b.x);
+		ft_fswap(&a.y, &b.y);
+	}
+	wu.gradient = (b.x - a.x == 0.0) ? 1.0 : (b.y - a.y) / (b.x - a.x);
+	wu = endpoints(wu, a, b, color);
+	wu_loop(wu, color);
 }

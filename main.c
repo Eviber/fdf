@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/27 22:52:15 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 03:05:17 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,26 @@ typedef struct	s_mlxdata
 	int				endian;
 }				t_mlxdata;
 
-void		imgputpixel(t_mlxdata dt, t_point pos, unsigned int color)
+t_mlxdata	getmlxdata(char *name)
 {
-	unsigned int	*addr;
+	static t_mlxdata	*data = NULL;
 
-	addr = (unsigned int *)(dt.img + (dt.sizeline * pos.y) + (pos.x * dt.bpp));
-	if (pos.x < 640 && pos.y < 480)
-		*addr = color;
+	if (data)
+		return (*data);
+	data = ft_memalloc(sizeof(t_mlxdata));
+	if (!data)
+		return (NULL);
+	if (!(data->mlx = mlx_init()))
+		return (NULL);
+	if (!(data->win = mlx_new_window(data->mlx, 640, 480, name)))
+		return (NULL);
+	if (!(data->imgptr = mlx_new_image(data->mlx, 640, 480)))
+		return (NULL);
+	if (!(data->img = mlx_get_data_addr(data->imgptr, &(data->bpp),
+										&(data->sizeline), &(data->endian))))
+		return (NULL);
+	data->bpp /= 8;
+	return (*data);
 }
 
 void		drawline(t_mlxdata data, t_line ln, unsigned int color)
@@ -90,14 +103,7 @@ int			main(int argc, char **argv)
 {
 	t_mlxdata	data;
 
-	if (!(data.mlx = mlx_init()))
-		return (-1);
-	if (!(data.win = mlx_new_window(data.mlx, 640, 480, argv[0])))
-		return (-1);
-	if (!(data.imgptr = mlx_new_image(data.mlx, 640, 480)))
-		return (-1);
-	data.img = mlx_get_data_addr(data.imgptr, &(data.bpp), &(data.sizeline), &(data.endian));
-	data.bpp /= 8;
+	data = getmlxdata(argv[0]);
 	draw(data);
 	mlx_put_image_to_window(data.mlx, data.win, data.imgptr, 0, 0);
 	mlx_loop(data.mlx);
