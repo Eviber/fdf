@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 17:21:06 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 17:22:44 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void		draw(void)
 	i = 0;
 	while (i++ < 200)
 	{
-		update();
+//		update();
 		line.a.x = rand() % WIN_W;
 		line.a.y = rand() % WIN_H;
 		line.b.x = rand() % WIN_W;
