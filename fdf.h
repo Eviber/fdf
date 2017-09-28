@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 21:27:31 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 22:59:57 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 
 # define WIN_W 1920
 # define WIN_H 1080
+
+typedef struct	s_map
+{
+	int			**grid;
+	int			*gridlen;
+}				t_map;
 
 typedef struct	s_point
 {
@@ -29,6 +35,7 @@ typedef struct	s_line
 }				t_line;
 
 typedef struct	s_mlxdata {
+	t_map		map;
 	void		*mlx;
 	void		*win;
 	void		*imgptr;
@@ -54,6 +61,8 @@ typedef struct	s_color
 	double		g;
 	double		b;
 }				t_color;
+
+t_map			parse(char *path, int size);
 
 t_mlxdata		*getmlxdata(char *name);
 

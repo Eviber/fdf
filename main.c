@@ -6,13 +6,14 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 21:47:02 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 23:49:00 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <time.h>
 #include "minilibx_macos/mlx.h"
+#include "libft.h"
 #include "fdf.h"
 
 t_mlxdata	*getmlxdata(char *name)
@@ -53,45 +54,35 @@ void		update(void)
 
 void		draw(void)
 {
-	t_line	line;
-	double	i;
-
-	i= 0;
-	line.a.x = WIN_W / 2;
-	line.a.y = WIN_H / 2;
-	while (i < WIN_H)
-	{
-		line.b.x = 0;
-		line.b.y = i;
-		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
-		line.b.x = WIN_W;
-		line.b.y = i;
-		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
-		i += WIN_H / 50;
-		update();
-	}
-	i = 0;
-	while (i < WIN_W)
-	{
-		line.b.x = i;
-		line.b.y = 0;
-		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
-		line.b.x = i;
-		line.b.y = WIN_H;
-		drawline(line.a, line.b, 0x0000FF00, 0x00FF0000);
-		i += WIN_W / 50;
-		update();
-	}
 }
 
+#include <fcntl.h>
 int			main(int argc, char **argv)
 {
 	t_mlxdata	*data;
+	char		*line;
 	int			*ptr;
 	int			i;
+	int			j;
+	int			fd;
 
-	srand(time(NULL));
+	if (argc != 2)
+		return (-1);
+	fd = open(argv[2], O_RDONLY);
+	i = 0;
+	while (get_next_line(fd, &line) > 0)
+		i++;
 	data = getmlxdata(argv[0]);
+	data->map = parse(argv[1], i);
+	i = 0;
+	while (data->map.grid[i])
+	{
+		j = 0;
+		while (j < data->map.gridlen[i])
+			printf("%d", data->map.grid[i][j++]);
+		printf("\n");
+		i++;
+	}
 	i = 0;
 	ptr = (int *)(data->img);
 	while (i < data->sizeline * WIN_H / 4)
