@@ -6,13 +6,14 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 15:53:45 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 16:37:47 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <math.h>
 #include "minilibx_macos/mlx.h"
+#include "libft.h"
 #include "fdf.h"
 
 void		imgputpixel(int x, int y, unsigned int color)
@@ -26,36 +27,11 @@ void		imgputpixel(int x, int y, unsigned int color)
 		*addr = color;
 }
 
-void		ft_fswap(double *a, double *b)
-{
-	double	c;
-
-	c = *a;
-	*a = *b;
-	*b = c;
-}
-
-double		fpart(double n)
-{
-	return (n - floor(n));
-}
-
-double		rfpart(double n)
-{
-	return (1 - fpart(n));
-}
-
-unsigned int	setal(float a, unsigned int rgb)
-{
-	return ((((char)round(255 - (a * 255))) << 24) + rgb);
-}
-
-t_wu		endpoints(t_wu wu, t_point a, t_point b, unsigned int color)
+t_wu		endpoint1(t_wu wu, t_point a, unsigned int color)
 {
 	t_point	end;
 	float	xgap;
 
-// handle first endpoint
 	end.x = floor(a.x) + 0.5;
 	end.y = a.y + wu.gradient * (end.x - a.x);
 	xgap = rfpart(a.x + 0.5);
@@ -63,17 +39,27 @@ t_wu		endpoints(t_wu wu, t_point a, t_point b, unsigned int color)
 	wu.pxstart.y = floor(end.y);
 	if (wu.steep)
 	{
-		imgputpixel(wu.pxstart.y, wu.pxstart.x, setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxstart.y + 1, wu.pxstart.x, setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.y, wu.pxstart.x,
+					setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.y + 1, wu.pxstart.x,
+					setal(fpart(end.y) * xgap, color));
 	}
 	else
 	{
-		imgputpixel(wu.pxstart.x, wu.pxstart.y, setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxstart.x, wu.pxstart.y + 1, setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.x, wu.pxstart.y,
+					setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxstart.x, wu.pxstart.y + 1,
+					setal(fpart(end.y) * xgap, color));
 	}
 	wu.intery = end.y + wu.gradient;
+	return (wu);
+}
 
-// handle second endpoint
+t_wu		endpoint2(t_wu wu, t_point b, unsigned int color)
+{
+	t_point	end;
+	float	xgap;
+
 	end.x = floor(b.x) + 0.5;
 	end.y = b.y + wu.gradient * (end.x - b.x);
 	xgap = fpart(b.x + 0.5);
@@ -81,13 +67,17 @@ t_wu		endpoints(t_wu wu, t_point a, t_point b, unsigned int color)
 	wu.pxend.y = floor(end.y);
 	if (wu.steep)
 	{
-		imgputpixel(wu.pxend.y, wu.pxend.x, setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxend.y + 1, wu.pxend.x, setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.y, wu.pxend.x,
+					setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.y + 1, wu.pxend.x,
+					setal(fpart(end.y) * xgap, color));
 	}
 	else
 	{
-		imgputpixel(wu.pxend.x, wu.pxend.y, setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxend.x, wu.pxend.y + 1, setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.x, wu.pxend.y,
+					setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.x, wu.pxend.y + 1,
+					setal(fpart(end.y) * xgap, color));
 	}
 	return (wu);
 }
@@ -98,8 +88,10 @@ void		wu_loop(t_wu wu, unsigned int color)
 	{
 		while (++wu.pxstart.x < wu.pxend.x - 1)
 		{
-			imgputpixel(floor(wu.intery), wu.pxstart.x, setal(rfpart(wu.intery), color));
-			imgputpixel(floor(wu.intery) + 1, wu.pxstart.x, setal(fpart(wu.intery), color));
+			imgputpixel(floor(wu.intery), wu.pxstart.x,
+						setal(rfpart(wu.intery), color));
+			imgputpixel(floor(wu.intery) + 1, wu.pxstart.x,
+						setal(fpart(wu.intery), color));
 			wu.intery += wu.gradient;
 		}
 	}
@@ -107,8 +99,10 @@ void		wu_loop(t_wu wu, unsigned int color)
 	{
 		while (++wu.pxstart.x < wu.pxend.x - 1)
 		{
-			imgputpixel(wu.pxstart.x, floor(wu.intery), setal(rfpart(wu.intery), color));
-			imgputpixel(wu.pxstart.x, floor(wu.intery) + 1, setal(fpart(wu.intery), color));
+			imgputpixel(wu.pxstart.x, floor(wu.intery),
+						setal(rfpart(wu.intery), color));
+			imgputpixel(wu.pxstart.x, floor(wu.intery) + 1,
+						setal(fpart(wu.intery), color));
 			wu.intery += wu.gradient;
 		}
 	}
@@ -130,6 +124,7 @@ void		drawline(t_point a, t_point b, unsigned int color)
 		ft_fswap(&a.y, &b.y);
 	}
 	wu.gradient = (b.x - a.x == 0.0) ? 1.0 : (b.y - a.y) / (b.x - a.x);
-	wu = endpoints(wu, a, b, color);
+	wu = endpoint1(wu, a, color);
+	wu = endpoint2(wu, b, color);
 	wu_loop(wu, color);
 }

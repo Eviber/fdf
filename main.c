@@ -6,11 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/28 15:54:33 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/09/28 17:21:06 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <time.h>
 #include "minilibx_macos/mlx.h"
 #include "fdf.h"
 
@@ -36,20 +37,34 @@ t_mlxdata	*getmlxdata(char *name)
 	return (data);
 }
 
+void		update(void)
+{
+	t_mlxdata	*data;
+	int			*ptr;
+	int			i;
+
+	i = 0;
+	data = getmlxdata(NULL);
+	ptr = (int *)(data->img);
+	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
+	while (i < data->sizeline * WIN_H / 4)
+		ptr[i++] = 0xFF000000;
+}
+
 void		draw(void)
 {
 	t_line	line;
+	int		i;
 
-	line.a.x = 0;
-	line.a.y = 0;
-	line.b.x = 0;
-	line.b.y = WIN_H;
-	drawline(line.a, line.b, 0x00FFFFFF);
-	while (line.a.x < WIN_W)
+	i = 0;
+	while (i++ < 200)
 	{
-//		line.b.y = line.a.y;
-		drawline(line.a, line.b, 0x0000FF00);
-		line.a.x += 20;
+		update();
+		line.a.x = rand() % WIN_W;
+		line.a.y = rand() % WIN_H;
+		line.b.x = rand() % WIN_W;
+		line.b.y = rand() % WIN_H;
+		drawline(line.a, line.b, (rand() % 0x01000000));
 	}
 }
 
@@ -59,11 +74,12 @@ int			main(int argc, char **argv)
 	int			*ptr;
 	int			i;
 
+	srand(time(NULL));
 	data = getmlxdata(argv[0]);
 	i = 0;
 	ptr = (int *)(data->img);
 	while (i < data->sizeline * WIN_H / 4)
-		ptr[i++] = 0x00FF0000;
+		ptr[i++] = 0x00000000;
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	draw();
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
