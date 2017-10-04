@@ -1,4 +1,6 @@
 *.a
 *.o
+*.swp
 a.out
 test.c
+test_maps/*
