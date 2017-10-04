@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/29 23:18:53 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/04 21:26:06 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,44 +52,9 @@ void		update(void)
 		ptr[i++] = 0xFF000000;
 }
 
-void		draw(unsigned int c1, unsigned int c2)
+void		draw(t_map	map)
 {
-	double	i;
-	t_line	ln;
-
-	i = 0;
-	while (i < WIN_W)
-	{
-		ln.a.x = 0;
-		ln.a.y = (i * WIN_H) / WIN_W;
-		ln.b.x = WIN_W - i;
-		ln.b.y = 0;
-		drawline(ln.a, ln.b, c1, c2);
-		update();
-		ln.a.x = WIN_W;
-		ln.a.y = (i * WIN_H) / WIN_W;
-		ln.b.x = WIN_W - i;
-		ln.b.y = WIN_H;
-		drawline(ln.a, ln.b, c1, c2);
-		update();
-		i += WIN_W / 100;
-	}
-	while (i > 0)
-	{
-		ln.a.x = i;
-		ln.a.y = 0;
-		ln.b.x = WIN_W;
-		ln.b.y = (i * WIN_H) / WIN_W;
-		drawline(ln.a, ln.b, c1, c2);
-		update();
-		ln.a.x = i;
-		ln.a.y = WIN_H;
-		ln.b.x = 0;
-		ln.b.y = (i * WIN_H) / WIN_W;
-		drawline(ln.a, ln.b, c1, c2);
-		update();
-		i -= WIN_W / 100;
-	}
+	draw_grid(map);
 }
 
 int			main(int argc, char **argv)
@@ -99,9 +64,10 @@ int			main(int argc, char **argv)
 	srand(time(NULL));
 	if (argc != 2)
 		return (-1);
-	parse("lol");
-//	data = getmlxdata(argv[0]);
-//	draw(0x00FF0000, 0x0000FF00);
-//	mlx_loop(data->mlx);
+	data = getmlxdata(argv[0]);
+	data->map = parse(argv[1]);
+	draw(data->map);
+	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
+	mlx_loop(data->mlx);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/29 23:17:28 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/04 21:27:14 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ unsigned int	setal(float a, unsigned int rgb);
 t_color			addcolors(t_color a, double r, double g, double b);
 t_color			setcolors(t_wu wu, unsigned int from, unsigned int to);
 
+void			update(void);
 void			drawline(t_point a, t_point b, unsigned int scol,
 															unsigned int ecol);
+void			draw_grid(t_map map);
 
 #endif

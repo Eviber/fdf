@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/09/29 20:20:55 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/04 22:13:16 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,4 +140,43 @@ void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 	wu = endpoint1(wu, a, scol);
 	wu = endpoint2(wu, b, ecol);
 	wu_loop(wu, scol, ecol);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+#define DI 20
+#define DJ 15
+#define DH -1
+
+void	draw_grid(t_map map)
+{
+	t_point	pt;
+	t_point	px;
+	t_point	px2;
+
+	pt.y = 0;
+	while (pt.y < map.height)
+	{
+		pt.x = 0;
+		while (pt.x < map.width)
+		{
+			px.x = pt.x * DI + (pt.y * DI);
+			px.y = WIN_H / 2 - (pt.x * DJ) + (pt.y * DJ) + map.array[(int)pt.y][(int)pt.x] * DH;
+			if (pt.x)
+			{
+				px2.x = (pt.x - 1) * DI + (pt.y * DI);
+				px2.y = WIN_H / 2 - ((pt.x - 1) * DJ) + (pt.y * DJ) + map.array[(int)pt.y][(int)pt.x - 1] * DH;
+				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
+			}
+			update();
+			if (pt.y)
+			{
+				px2.x = pt.x * DI + ((pt.y - 1) * DI);
+				px2.y = WIN_H / 2 - (pt.x * DJ) + ((pt.y - 1) * DJ) + map.array[(int)pt.y - 1][(int)pt.x] * DH;
+				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
+			}
+			update();
+			pt.x++;
+		}
+		pt.y++;
+	}
 }
