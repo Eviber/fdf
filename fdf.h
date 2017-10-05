@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/05 15:11:56 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/05 23:38:08 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ typedef struct	s_map
 	int			height;
 }				t_map;
 
-typedef struct	s_mlxdata {
-	t_map		map;
+typedef struct	s_mlxdata
+{
 	void		*mlx;
 	void		*win;
 	void		*imgptr;
@@ -65,9 +65,17 @@ typedef struct	s_color
 	double		b;
 }				t_color;
 
+typedef struct	s_env
+{
+	t_map		map;
+	t_point		d;
+	int			startpoint;
+}				t_env;
+
 t_map			parse(char *path);
 
 t_mlxdata		*getmlxdata(char *name);
+int				keyhook(int key, void *cetruc);
 
 void			ft_fswap(double *a, double *b);
 
@@ -75,12 +83,13 @@ double			fpart(double n);
 double			rfpart(double n);
 unsigned int	setal(float a, unsigned int rgb);
 t_color			addcolors(t_color a, double r, double g, double b);
-t_color			setcolors(t_wu wu, unsigned int from, unsigned int to);
+t_color			setcolors(double diff, unsigned int from, unsigned int to);
 
+void			draw(t_env	env);
 void			update(void);
 void			drawline(t_point a, t_point b, unsigned int scol,
 															unsigned int ecol);
-void			draw_grid(t_map map);
-void			draw_map(t_map map);
+void			draw_grid(t_env map);
+void			draw_map(t_env map);
 
 #endif

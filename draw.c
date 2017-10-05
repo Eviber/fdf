@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/05 15:22:51 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/05 23:17:07 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,15 @@ t_wu		endpoint2(t_wu wu, t_point b, unsigned int color)
 	wu.pxend.y = floor(end.y);
 	if (wu.steep)
 	{
-		imgputpixel(wu.pxend.y, wu.pxend.x,
-					setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxend.y + 1, wu.pxend.x,
-					setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.y, wu.pxend.x, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.y + 1, wu.pxend.x, setal(fpart(end.y) * xgap,
+																		color));
 	}
 	else
 	{
-		imgputpixel(wu.pxend.x, wu.pxend.y,
-					setal(rfpart(end.y) * xgap, color));
-		imgputpixel(wu.pxend.x, wu.pxend.y + 1,
-					setal(fpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.x, wu.pxend.y, setal(rfpart(end.y) * xgap, color));
+		imgputpixel(wu.pxend.x, wu.pxend.y + 1, setal(fpart(end.y) * xgap,
+																		color));
 	}
 	return (wu);
 }
@@ -87,7 +85,7 @@ void		wu_loop(t_wu wu, unsigned int fromcolor, unsigned int tocolor)
 	t_color	d;
 
 	ft_memset(&cur, 0, sizeof(t_color));
-	d = setcolors(wu, fromcolor, tocolor);
+	d = setcolors(wu.pxend.x - wu.pxstart.x, fromcolor, tocolor);
 	while (++wu.pxstart.x < wu.pxend.x)
 	{
 		if (wu.steep)
@@ -119,8 +117,27 @@ void		ft_uiswap(unsigned int *a, unsigned int *b)
 	*b = c;
 }
 
-void		bresenheim()
+void		rawline(t_point a, t_point b, unsigned int color)
 {
+	t_point	d;
+	t_point	sens;
+	double	err;
+	double	e2;
+
+	d.x = round(fabs(b.x - a.x));
+	d.y = round(fabs(b.y - a.y));
+	sens.x = a.x < b.x ? 1 : -1;
+	sens.y = a.y < b.y ? 1 : -1;
+	err = (d.x > d.y ? d.x : - d.y) / 2;
+	while(a.x != b.x || a.y != b.y)
+	{
+		imgputpixel(a.x, a.y, color);
+		e2 = err;
+		err -= d.y * (e2 > -d.x);
+		a.x += sens.x * (e2 > -d.x);
+		err += d.x * (e2 < d.y);
+		a.y += sens.y * (e2 < d.y);
+	}
 }
 
 void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
@@ -146,77 +163,68 @@ void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-#define DH -1
+#define DH -5
 
-void	draw_grid(t_map map)
+void	draw_grid(t_env env)
 {
 	t_point	pt;
 	t_point	px;
 	t_point	px2;
 	t_point	D;
-	int		startpoint;
 
-	D.x = WIN_W / (map.width + map.height);
-	D.y = D.x / 2;
-	startpoint = D.y * (map.width + 1);
 	pt.x = 0;
 	pt.y = 0;
-	while (pt.y < map.height)
+	while (pt.y < env.map.height)
 	{
-		px.x = pt.x * D.x + (pt.y * D.x);
-		px.y = startpoint - (pt.x * D.y) + (pt.y * D.y);
-		px2.x = (map.width - 1) * D.x + (pt.y * D.x);
-		px2.y = startpoint - ((map.width - 1) * D.y) + (pt.y * D.y);
-		drawline(px, px2, 0xEEFFFFFF, 0xEEFFFFFF);
+		px.x = pt.x * env.d.x + (pt.y * env.d.x);
+		px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y);
+		px2.x = (env.map.width - 1) * env.d.x + (pt.y * env.d.x);
+		px2.y = env.startpoint - ((env.map.width - 1) * env.d.y) + (pt.y * env.d.y);
+		rawline(px, px2, 0xCCFFFFFF);
 		pt.y++;
 	}
 	pt.y = 0;
-	while (pt.x < map.width)
+	while (pt.x < env.map.width)
 	{
-		px.x = pt.x * D.x + (pt.y * D.x);
-		px.y = startpoint - (pt.x * D.y) + (pt.y * D.y);
-		px2.x = pt.x * D.x + ((map.height - 1) * D.x);
-		px2.y = startpoint - (pt.x * D.y) + ((map.height - 1) * D.y);
-		drawline(px, px2, 0xEEFFFFFF, 0xEEFFFFFF);
+		px.x = pt.x * env.d.x + (pt.y * env.d.x);
+		px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y);
+		px2.x = pt.x * env.d.x + ((env.map.height - 1) * env.d.x);
+		px2.y = env.startpoint - (pt.x * env.d.y) + ((env.map.height - 1) * env.d.y);
+		rawline(px, px2, 0xCCFFFFFF);
 		pt.x++;
 	}
 }
 
-void	draw_map(t_map map)
+void	draw_map(t_env env)
 {
 	t_point	pt;
 	t_point	px;
 	t_point	px2;
-	t_point	D;
-	int		startpoint;
 
-	D.x = WIN_W / (map.width + map.height);
-	D.y = D.x / 2;
 	pt.y = 0;
-	startpoint = D.y * (map.width + 1);
-	while (pt.y < map.height)
+	while (pt.y < env.map.height)
 	{
 		pt.x = 0;
-		while (pt.x < map.width)
+		while (pt.x < env.map.width)
 		{
-			px.x = pt.x * D.x + (pt.y * D.x);
-			px.y = startpoint - (pt.x * D.y) + (pt.y * D.y) + map.array[(int)pt.y][(int)pt.x] * DH;
+			px.x = pt.x * env.d.x + (pt.y * env.d.x);
+			px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x] * DH;
 			if (pt.x)
 			{
-				px2.x = (pt.x - 1) * D.x + (pt.y * D.x);
-				px2.y = startpoint - ((pt.x - 1) * D.y) + (pt.y * D.y) + map.array[(int)pt.y][(int)pt.x - 1] * DH;
+				px2.x = (pt.x - 1) * env.d.x + (pt.y * env.d.x);
+				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x - 1] * DH;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
 			if (pt.y)
 			{
-				px2.x = pt.x * D.x + ((pt.y - 1) * D.x);
-				px2.y = startpoint - (pt.x * D.y) + ((pt.y - 1) * D.y) + map.array[(int)pt.y - 1][(int)pt.x] * DH;
+				px2.x = pt.x * env.d.x + ((pt.y - 1) * env.d.x);
+				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * DH;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
 			if (pt.x && pt.y)
 			{
-				px2.x = (pt.x - 1) * D.x + ((pt.y - 1) * D.x);
-				px2.y = startpoint - ((pt.x - 1) * D.y) + ((pt.y - 1) * D.y) + map.array[(int)pt.y - 1][(int)pt.x - 1] * DH;
+				px2.x = (pt.x - 1) * env.d.x + ((pt.y - 1) * env.d.x);
+				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * DH;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
 			pt.x++;

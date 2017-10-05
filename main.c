@@ -2,10 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */ /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/04 21:26:06 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/05 23:17:20 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +52,28 @@ void		update(void)
 		ptr[i++] = 0xFF000000;
 }
 
-void		draw(t_map	map)
+void		draw(t_env	env)
 {
-	draw_grid(map);
-	draw_map(map);
+	draw_grid(env);
+	update();
+	draw_map(env);
 }
 
 int			main(int argc, char **argv)
 {
 	t_mlxdata	*data;
+	t_env		env;
 
 	srand(time(NULL));
 	if (argc != 2)
 		return (-1);
 	data = getmlxdata(argv[0]);
-	data->map = parse(argv[1]);
-	draw(data->map);
+	env.map = parse(argv[1]);
+	env.d.x = WIN_W / (env.map.width + env.map.height);
+	env.d.y = env.d.x / 2;
+	env.startpoint = env.d.y * (env.map.width + 1);
+	mlx_hook(data->win, 2, 2, keyhook, &env);
+	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	mlx_loop(data->mlx);
 	return (0);
