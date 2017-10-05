@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/04 21:27:14 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/05 15:11:56 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ void			update(void);
 void			drawline(t_point a, t_point b, unsigned int scol,
 															unsigned int ecol);
 void			draw_grid(t_map map);
+void			draw_map(t_map map);
 
 #endif

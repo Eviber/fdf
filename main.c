@@ -2,8 +2,7 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
+/*                                                    +:+ +:+         +:+     */ /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
 /*   Updated: 2017/10/04 21:26:06 by ygaude           ###   ########.fr       */
@@ -55,6 +54,7 @@ void		update(void)
 void		draw(t_map	map)
 {
 	draw_grid(map);
+	draw_map(map);
 }
 
 int			main(int argc, char **argv)

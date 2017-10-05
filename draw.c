@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/04 22:13:16 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/05 15:22:51 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,14 @@ void		imgputpixel(int x, int y, unsigned int color)
 
 	dt = getmlxdata(NULL);
 	addr = (unsigned int *)(dt->img + (dt->sizeline * y) + (x * dt->bpp));
-	if (x < WIN_W && y < WIN_H)
+	if (0 <= x && x < WIN_W && 0 <= y &&  y < WIN_H)
 		*addr = color;
 }
 
 t_wu		endpoint1(t_wu wu, t_point a, unsigned int color)
 {
 	t_point	end;
-	float	xgap;
-
+	float	xgap; 
 	end.x = floor(a.x) + 0.5;
 	end.y = a.y + wu.gradient * (end.x - a.x);
 	xgap = rfpart(a.x + 0.5);
@@ -89,7 +88,7 @@ void		wu_loop(t_wu wu, unsigned int fromcolor, unsigned int tocolor)
 
 	ft_memset(&cur, 0, sizeof(t_color));
 	d = setcolors(wu, fromcolor, tocolor);
-	while (++wu.pxstart.x < wu.pxend.x - 1)
+	while (++wu.pxstart.x < wu.pxend.x)
 	{
 		if (wu.steep)
 			imgputpixel(floor(wu.intery), wu.pxstart.x,
@@ -120,6 +119,10 @@ void		ft_uiswap(unsigned int *a, unsigned int *b)
 	*b = c;
 }
 
+void		bresenheim()
+{
+}
+
 void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 {
 	t_wu	wu;
@@ -143,8 +146,6 @@ void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-#define DI 20
-#define DJ 15
 #define DH -1
 
 void	draw_grid(t_map map)
@@ -152,29 +153,72 @@ void	draw_grid(t_map map)
 	t_point	pt;
 	t_point	px;
 	t_point	px2;
+	t_point	D;
+	int		startpoint;
 
+	D.x = WIN_W / (map.width + map.height);
+	D.y = D.x / 2;
+	startpoint = D.y * (map.width + 1);
+	pt.x = 0;
 	pt.y = 0;
+	while (pt.y < map.height)
+	{
+		px.x = pt.x * D.x + (pt.y * D.x);
+		px.y = startpoint - (pt.x * D.y) + (pt.y * D.y);
+		px2.x = (map.width - 1) * D.x + (pt.y * D.x);
+		px2.y = startpoint - ((map.width - 1) * D.y) + (pt.y * D.y);
+		drawline(px, px2, 0xEEFFFFFF, 0xEEFFFFFF);
+		pt.y++;
+	}
+	pt.y = 0;
+	while (pt.x < map.width)
+	{
+		px.x = pt.x * D.x + (pt.y * D.x);
+		px.y = startpoint - (pt.x * D.y) + (pt.y * D.y);
+		px2.x = pt.x * D.x + ((map.height - 1) * D.x);
+		px2.y = startpoint - (pt.x * D.y) + ((map.height - 1) * D.y);
+		drawline(px, px2, 0xEEFFFFFF, 0xEEFFFFFF);
+		pt.x++;
+	}
+}
+
+void	draw_map(t_map map)
+{
+	t_point	pt;
+	t_point	px;
+	t_point	px2;
+	t_point	D;
+	int		startpoint;
+
+	D.x = WIN_W / (map.width + map.height);
+	D.y = D.x / 2;
+	pt.y = 0;
+	startpoint = D.y * (map.width + 1);
 	while (pt.y < map.height)
 	{
 		pt.x = 0;
 		while (pt.x < map.width)
 		{
-			px.x = pt.x * DI + (pt.y * DI);
-			px.y = WIN_H / 2 - (pt.x * DJ) + (pt.y * DJ) + map.array[(int)pt.y][(int)pt.x] * DH;
+			px.x = pt.x * D.x + (pt.y * D.x);
+			px.y = startpoint - (pt.x * D.y) + (pt.y * D.y) + map.array[(int)pt.y][(int)pt.x] * DH;
 			if (pt.x)
 			{
-				px2.x = (pt.x - 1) * DI + (pt.y * DI);
-				px2.y = WIN_H / 2 - ((pt.x - 1) * DJ) + (pt.y * DJ) + map.array[(int)pt.y][(int)pt.x - 1] * DH;
+				px2.x = (pt.x - 1) * D.x + (pt.y * D.x);
+				px2.y = startpoint - ((pt.x - 1) * D.y) + (pt.y * D.y) + map.array[(int)pt.y][(int)pt.x - 1] * DH;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			update();
 			if (pt.y)
 			{
-				px2.x = pt.x * DI + ((pt.y - 1) * DI);
-				px2.y = WIN_H / 2 - (pt.x * DJ) + ((pt.y - 1) * DJ) + map.array[(int)pt.y - 1][(int)pt.x] * DH;
+				px2.x = pt.x * D.x + ((pt.y - 1) * D.x);
+				px2.y = startpoint - (pt.x * D.y) + ((pt.y - 1) * D.y) + map.array[(int)pt.y - 1][(int)pt.x] * DH;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			update();
+			if (pt.x && pt.y)
+			{
+				px2.x = (pt.x - 1) * D.x + ((pt.y - 1) * D.x);
+				px2.y = startpoint - ((pt.x - 1) * D.y) + ((pt.y - 1) * D.y) + map.array[(int)pt.y - 1][(int)pt.x - 1] * DH;
+				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
+			}
 			pt.x++;
 		}
 		pt.y++;
