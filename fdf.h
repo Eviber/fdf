@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/05 23:38:08 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/07 11:08:05 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ typedef struct	s_env
 {
 	t_map		map;
 	t_point		d;
+	double		rot;
+	double		dh;
 	int			startpoint;
 }				t_env;
 

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/05 23:17:07 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/07 11:41:21 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void		rawline(t_point a, t_point b, unsigned int color)
 	sens.x = a.x < b.x ? 1 : -1;
 	sens.y = a.y < b.y ? 1 : -1;
 	err = (d.x > d.y ? d.x : - d.y) / 2;
-	while(a.x != b.x || a.y != b.y)
+	while(round(a.x) != round(b.x) || round(a.y) != round(b.y))
 	{
 		imgputpixel(a.x, a.y, color);
 		e2 = err;
@@ -162,18 +162,17 @@ void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 	wu_loop(wu, scol, ecol);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-#define DH -5
-
 void	draw_grid(t_env env)
 {
 	t_point	pt;
 	t_point	px;
 	t_point	px2;
-	t_point	D;
 
 	pt.x = 0;
 	pt.y = 0;
+	if (env.rot> env.d.x || env.rot < -env.d.x)
+		env.d.y = (env.rot > env.d.x) ? env.rot - 2 * (env.rot - env.d.x) :
+										env.rot - 2 * (env.rot + env.d.x);
 	while (pt.y < env.map.height)
 	{
 		px.x = pt.x * env.d.x + (pt.y * env.d.x);
@@ -202,29 +201,30 @@ void	draw_map(t_env env)
 	t_point	px2;
 
 	pt.y = 0;
+	printf("env.d.rot = %f ; env.d.y = %f\n", env.rot, env.d.y);
 	while (pt.y < env.map.height)
 	{
 		pt.x = 0;
 		while (pt.x < env.map.width)
 		{
 			px.x = pt.x * env.d.x + (pt.y * env.d.x);
-			px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x] * DH;
+			px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x] * env.dh;
 			if (pt.x)
 			{
 				px2.x = (pt.x - 1) * env.d.x + (pt.y * env.d.x);
-				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x - 1] * DH;
+				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x - 1] * env.dh;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
 			if (pt.y)
 			{
 				px2.x = pt.x * env.d.x + ((pt.y - 1) * env.d.x);
-				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * DH;
+				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * env.dh;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			if (pt.x && pt.y)
+			if (0 && pt.x && pt.y)
 			{
 				px2.x = (pt.x - 1) * env.d.x + ((pt.y - 1) * env.d.x);
-				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * DH;
+				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * env.dh;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
 			pt.x++;

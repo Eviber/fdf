@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/05 23:17:20 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/07 11:29:40 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ void		update(void)
 
 void		draw(t_env	env)
 {
-	draw_grid(env);
-	update();
+//	draw_grid(env);
 	draw_map(env);
 }
 
@@ -69,9 +68,11 @@ int			main(int argc, char **argv)
 		return (-1);
 	data = getmlxdata(argv[0]);
 	env.map = parse(argv[1]);
-	env.d.x = WIN_W / (env.map.width + env.map.height);
-	env.d.y = env.d.x / 2;
-	env.startpoint = env.d.y * (env.map.width + 1);
+	env.d.x = WIN_H / (env.map.width + env.map.height);
+	env.d.y = env.d.x;
+	env.dh = 0;
+	env.rot = env.d.x;
+	env.startpoint = env.map.width * env.d.y;
 	mlx_hook(data->win, 2, 2, keyhook, &env);
 	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
