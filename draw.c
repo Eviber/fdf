@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/07 11:41:21 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/09 21:25:04 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	draw_map(t_env env)
 				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * env.dh;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			if (0 && pt.x && pt.y)
+			if (pt.x && pt.y)
 			{
 				px2.x = (pt.x - 1) * env.d.x + ((pt.y - 1) * env.d.x);
 				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * env.dh;
