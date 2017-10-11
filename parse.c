@@ -6,11 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/09 22:10:33 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/11 20:37:09 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
+#include <errno.h>
 #include "libft/libft.h"
 #include "fdf.h"
 
@@ -43,25 +44,67 @@ int			**randmap(char *path, int *w, int *h)
 	return (array);
 }
 
-#define BUFFER 1000000
+void		exit_error(char *str)
+{
+	ft_putendl_fd(str, 2);
+	exit(errno);
+}
+
+#define FILE_MAXSIZE 100000000
+#include <unistd.h>
 
 char		*readfile(char *path)
 {
+	ssize_t	size;
 	int		fd;
-	int		i;
-	int		nbuf;
 	char	*str;
 
 	fd = open(path, O_RDONLY);
-	if (fd == -1)
-		return (NULL);
-	nbuf = 1;
-	str = malloc(BUFFER);
-	while (i < BUFFER && read(fd, str + i, BUFFER - i))
-	{
-		
-	}
+	if (fd == -1 || !(str = malloc(FILE_MAXSIZE + 1)))
+		exit_error(strerror(errno));
+	if ((size = read(fd, str, FILE_MAXSIZE + 1)) == -1)
+		exit_error(strerror(errno));
+	if (size > FILE_MAXSIZE)
+		exit_error("File too large");
+	str[size] = '\0';
 	return (str);
+}
+
+int			isnumber(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (ft_isdigit(str[i]))
+		i++;
+	if (str[i] == ',')
+	{
+		i++;
+	}
+}
+
+void		getmapsize(char *str, int *w, int *h)
+{
+	int		i;
+	int		wd;
+
+	*w = 0;
+	*h = -1;
+	while (*str)
+	{
+		i = 0;
+		while (*str && *str != '\n')
+		{
+			i += ((!i || ft_isspace(*str)) && !ft_isspace(*str));
+			str++;
+		}
+		if (i != *w && *w != -1)
+			exit_error("Map error (line length)");
+		*w = i;
+		str += i + (str[i] == '\n');
+		*str = (*str == '\n') ? '\0' : *str;
+		(*w)++;
+	}
 }
 
 int			**parsefile(char *path, int *w, int *h)
@@ -69,6 +112,9 @@ int			**parsefile(char *path, int *w, int *h)
 	char	*file;
 
 	file = readfile(path);
+	getmapsize(file, w, h);
+	printf("w = %d, h = %d\n", *w, *h);
+	free(file);
 }
 
 t_map		parse(char *path)

@@ -6,11 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/07 11:29:40 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/11 16:03:36 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <errno.h>
 #include <time.h>
 #include "minilibx_macos/mlx.h"
 #include "libft.h"
@@ -37,7 +38,6 @@ t_mlxdata	*getmlxdata(char *name)
 	data->bpp /= 8;
 	return (data);
 }
-
 void		update(void)
 {
 	t_mlxdata	*data;
@@ -58,11 +58,17 @@ void		draw(t_env	env)
 	draw_map(env);
 }
 
+char		*readfile(char *path);
+
 int			main(int argc, char **argv)
 {
 	t_mlxdata	*data;
 	t_env		env;
+	char		*str;
 
+	errno = 0;
+	parse(argv[1]);
+	return (0);
 	srand(time(NULL));
 	if (argc != 2)
 		return (-1);
