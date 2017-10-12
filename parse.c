@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/11 20:37:09 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/12 19:16:09 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ int			**randmap(char *path, int *w, int *h)
 	array = (int **)ft_memalloc(*h * sizeof(int *) + (*w * *h * sizeof(int)));
 	ptr = (int *)(array + *h);
 	i = -1;
-	while (++i < *h)
-		array[i] = ptr + (i * *w);
+	while (++i < *h) array[i] = ptr + (i * *w);
 	i = -1;
 	while (++i < *h && (j = -1))
 		while (++j < *w)
@@ -72,49 +71,103 @@ char		*readfile(char *path)
 
 int			isnumber(char *str)
 {
-	int		i;
-
-	i = 0;
-	while (ft_isdigit(str[i]))
-		i++;
-	if (str[i] == ',')
+	while (ft_isspace(*str) && *str != '\n')
+		str++;
+	str += (*str == '-');
+	while (ft_isdigit(*str))
+		str++;
+	if (*str == ',')
 	{
-		i++;
+		str += (str[1] == '0' && ft_toupper(str[2]) == 'X') ? 3 : 1;
+		while (ft_isalnum(*str) && ft_toupper(*str) <= 'F')
+			str++;
 	}
+	return (ft_isspace(*str) || !(*str));
 }
+
+char		*nextnum(char *str)
+{
+	while (!ft_isspace(*str) && *str != '\n')
+		str++;
+	while (ft_isspace(*str) && *str != '\n')
+		str++;
+	return (str);
+}
+
+// "   82361293 287431 2138937 02938123,2931801 9823012930,0x82317897 3892197  "
 
 void		getmapsize(char *str, int *w, int *h)
 {
-	int		i;
 	int		wd;
 
-	*w = 0;
-	*h = -1;
+	*w = -1;
+	*h = 0;
 	while (*str)
 	{
-		i = 0;
+		wd = 0;
+		while (ft_isspace(*str))
+			str++;
 		while (*str && *str != '\n')
 		{
-			i += ((!i || ft_isspace(*str)) && !ft_isspace(*str));
-			str++;
+			if (!isnumber(str))
+			{
+				printf("%.20s\n", str);
+				exit_error("Parse error");
+			}
+			wd++;
+			str = nextnum(str);
 		}
-		if (i != *w && *w != -1)
+		printf("wd = %d, w = %d\n", wd, *w);
+		if (wd != *w && *w != -1 && !(!(*str) && (*w)))
 			exit_error("Map error (line length)");
-		*w = i;
-		str += i + (str[i] == '\n');
-		*str = (*str == '\n') ? '\0' : *str;
-		(*w)++;
+		if (*str)
+			*w = wd;
+		(*h)++;
 	}
+}
+
+int			**parsemap(char *file, int w, int h)
+{
+	int		**array;
+	int		*ptr;
+	int		i;
+	int		j;
+
+	array = (int **)ft_memalloc(h * sizeof(int *) + (w * h * sizeof(int)));
+	ptr = (int *)(array + h);
+	i = -1;
+	while (++i < h)
+		array[i] = ptr + (i * w);
+	i = -1;
+	while (++i < h && (j = -1))
+	{
+		while (++j < w)
+		{
+			while (*file && ft_isspace(*file))
+				file++;
+			if (*file)
+			{
+				array[i][j] = ft_atoi(file);
+				file = nextnum(file);
+			}
+		}
+	}
+printf("I'M ALIIIIIIVE\n");
+	i = -1;
+	return (array);
 }
 
 int			**parsefile(char *path, int *w, int *h)
 {
+	int		**res;
 	char	*file;
 
 	file = readfile(path);
 	getmapsize(file, w, h);
 	printf("w = %d, h = %d\n", *w, *h);
+	res = parsemap(file, *w, *h);
 	free(file);
+	return (res);
 }
 
 t_map		parse(char *path)

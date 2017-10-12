@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/11 16:03:36 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/12 22:58:54 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ int			main(int argc, char **argv)
 	t_env		env;
 	char		*str;
 
+	srand(time(NULL));
 	errno = 0;
 	parse(argv[1]);
-	return (0);
-	srand(time(NULL));
+//	return (0);
 	if (argc != 2)
 		return (-1);
 	data = getmlxdata(argv[0]);

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 21:32:04 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/07 13:25:12 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/12 23:34:59 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 
 void	rotate(t_env *env, int key)
 {
-	env->rot += ((key == ARROW_UP) ? 2 : -2);
+	env->rot += 5 * (env->d.x / 100) * ((key == ARROW_UP) ? -1 : 1);
 	if (env->rot > env->d.x * 2 || env->rot < -env->d.x * 2)
-		env->rot = round((env->rot < 0) ? env->d.x * 2 : -env->d.x * 2);
+		env->rot = (env->rot > 0) ? -env->d.x * 2 : env->d.x * 2;
 	env->dh = 1 * (fabs(env->rot) - env->d.x) / env->d.x;
 	env->d.y = env->rot;
 	if (env->rot < -env->d.x)

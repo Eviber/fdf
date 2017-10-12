@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/09 21:25:04 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/12 22:58:45 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,24 @@
 void		imgputpixel(int x, int y, unsigned int color)
 {
 	t_mlxdata		*dt;
+	t_color			tmp;
+	t_color			orig;
+	t_color			res;
 	unsigned int	*addr;
 
 	dt = getmlxdata(NULL);
 	addr = (unsigned int *)(dt->img + (dt->sizeline * y) + (x * dt->bpp));
+	tmp = setcolors(1, 0, color);
+	orig = setcolors(1, 0, *addr);
+//	printf("%f;%f;%f = %#X\n", tmp.r, tmp.g, tmp.b, color);
+//	printf("%f;%f;%f = %#X\n", orig.r, orig.g, orig.b, *addr);
+	res.r = (tmp.r * tmp.a / 255.0) + (orig.r * orig.a * (255.0 - tmp.a));
+	res.g = (tmp.g * tmp.a / 255.0) + (orig.g * orig.a * (255.0 - tmp.a));
+	res.b = (tmp.b * tmp.a / 255.0) + (orig.b * orig.a * (255.0 - tmp.a));
+	res.a = tmp.a + (orig.a * (255.0 - tmp.a) / 255.0);
+	if (*addr)
+		color = ((int)round(res.r) << 16) + ((int)round(res.g) << 8) + round(res.b);
+//	printf("%f;%f;%f = %#X\n", res.r, res.g, res.b, color);
 	if (0 <= x && x < WIN_W && 0 <= y &&  y < WIN_H)
 		*addr = color;
 }
@@ -221,7 +235,7 @@ void	draw_map(t_env env)
 				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * env.dh;
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			if (pt.x && pt.y)
+			if (0 && pt.x && pt.y)
 			{
 				px2.x = (pt.x - 1) * env.d.x + ((pt.y - 1) * env.d.x);
 				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * env.dh;
