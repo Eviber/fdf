@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/12 22:58:45 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/13 20:47:10 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void		imgputpixel(int x, int y, unsigned int color)
 	res.g = (tmp.g * tmp.a / 255.0) + (orig.g * orig.a * (255.0 - tmp.a));
 	res.b = (tmp.b * tmp.a / 255.0) + (orig.b * orig.a * (255.0 - tmp.a));
 	res.a = tmp.a + (orig.a * (255.0 - tmp.a) / 255.0);
-	if (*addr)
+	if (0)//*addr)
 		color = ((int)round(res.r) << 16) + ((int)round(res.g) << 8) + round(res.b);
 //	printf("%f;%f;%f = %#X\n", res.r, res.g, res.b, color);
 	if (0 <= x && x < WIN_W && 0 <= y &&  y < WIN_H)
@@ -208,41 +208,60 @@ void	draw_grid(t_env env)
 	}
 }
 
+void	calc_map(t_env env)
+{
+	t_fdfval	**array;
+	t_point		px;
+	int			x;
+	int			y;
+
+	y = -1;
+	array = env.map.array;
+	while (++(y) < env.map.height && (x = -1))
+	{
+		while (++(x) < env.map.width)
+		{
+			px.x = x * env.d.x + (y * env.d.x);
+			ft_putstr("I'M ALIIIIIVE\n");
+			px.y = env.startpoint - (x * env.d.y) + (y * env.d.y) + (array[(int)y][(int)x]).alti * env.dh;
+			printf("px.x = %f ; px.y = %f\n", px.x, px.y);
+			env.map.grid[y][x] = px;
+		}
+	}
+}
+
 void	draw_map(t_env env)
 {
-	t_point	pt;
+	int		x;
+	int		y;
 	t_point	px;
 	t_point	px2;
 
-	pt.y = 0;
-	printf("env.d.rot = %f ; env.d.y = %f\n", env.rot, env.d.y);
-	while (pt.y < env.map.height)
+	calc_map(env);
+	y = 0;
+	while (y < env.map.height)
 	{
-		pt.x = 0;
-		while (pt.x < env.map.width)
+		x = 0;
+		while (x < env.map.width)
 		{
-			px.x = pt.x * env.d.x + (pt.y * env.d.x);
-			px.y = env.startpoint - (pt.x * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x] * env.dh;
-			if (pt.x)
+			px = env.map.grid[y][x];
+			if (x)
 			{
-				px2.x = (pt.x - 1) * env.d.x + (pt.y * env.d.x);
-				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + (pt.y * env.d.y) + env.map.array[(int)pt.y][(int)pt.x - 1] * env.dh;
+				px2 = env.map.grid[y][x - 1];
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			if (pt.y)
+			if (y)
 			{
-				px2.x = pt.x * env.d.x + ((pt.y - 1) * env.d.x);
-				px2.y = env.startpoint - (pt.x * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x] * env.dh;
+				px2 = env.map.grid[y - 1][x];
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			if (0 && pt.x && pt.y)
+			if (1 && x && y)
 			{
-				px2.x = (pt.x - 1) * env.d.x + ((pt.y - 1) * env.d.x);
-				px2.y = env.startpoint - ((pt.x - 1) * env.d.y) + ((pt.y - 1) * env.d.y) + env.map.array[(int)pt.y - 1][(int)pt.x - 1] * env.dh;
+				px2 = env.map.grid[y - 1][x - 1];
 				drawline(px, px2, 0x00FFFFFF, 0x00FFFFFF);
 			}
-			pt.x++;
+			x++;
 		}
-		pt.y++;
+		y++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/12 19:16:09 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/13 20:49:46 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int			isnumber(char *str)
 
 char		*nextnum(char *str)
 {
-	while (!ft_isspace(*str) && *str != '\n')
+	while (*str && !ft_isspace(*str) && *str != '\n')
 		str++;
 	while (ft_isspace(*str) && *str != '\n')
 		str++;
@@ -120,21 +120,40 @@ void		getmapsize(char *str, int *w, int *h)
 		printf("wd = %d, w = %d\n", wd, *w);
 		if (wd != *w && *w != -1 && !(!(*str) && (*w)))
 			exit_error("Map error (line length)");
+		(*h) += (*str || wd);
 		if (*str)
 			*w = wd;
-		(*h)++;
 	}
 }
 
-int			**parsemap(char *file, int w, int h)
+t_fdfval	getval(char *str)
 {
-	int		**array;
-	int		*ptr;
-	int		i;
-	int		j;
+	t_fdfval	val;
 
-	array = (int **)ft_memalloc(h * sizeof(int *) + (w * h * sizeof(int)));
-	ptr = (int *)(array + h);
+	val.alti = ft_atoi(str);
+	val.color = 0x00FFFFFF;
+	while (ft_isdigit(*str))
+		str++;
+	if (*str == ',')
+	{
+		str++;
+		if (str[0] == '0' && ft_toupper(str[1]) == 'X')
+			val.color = ft_atoi_base(str, 16);
+		else
+			val.color = ft_atoi_base(str, 10);
+	}
+	return (val);
+}
+
+t_fdfval	**parsemap(char *file, int w, int h)
+{
+	t_fdfval	**array;
+	t_fdfval	*ptr;
+	int			i;
+	int			j;
+
+	array = (t_fdfval **)ft_memalloc(h * sizeof(t_fdfval *) + (w * h * sizeof(t_fdfval)));
+	ptr = (t_fdfval *)(array + h);
 	i = -1;
 	while (++i < h)
 		array[i] = ptr + (i * w);
@@ -147,20 +166,19 @@ int			**parsemap(char *file, int w, int h)
 				file++;
 			if (*file)
 			{
-				array[i][j] = ft_atoi(file);
+				array[i][j] = getval(file);
 				file = nextnum(file);
 			}
 		}
 	}
-printf("I'M ALIIIIIIVE\n");
 	i = -1;
 	return (array);
 }
 
-int			**parsefile(char *path, int *w, int *h)
+t_fdfval	**parsefile(char *path, int *w, int *h)
 {
-	int		**res;
-	char	*file;
+	t_fdfval	**res;
+	char		*file;
 
 	file = readfile(path);
 	getmapsize(file, w, h);

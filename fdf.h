@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/07 11:08:05 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/13 20:40:53 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,16 @@ typedef struct	s_line
 	t_point		b;
 }				t_line;
 
+typedef struct	s_fdfval
+{
+	int				alti;
+	unsigned int	color;
+}				t_fdfval;
+
 typedef struct	s_map
 {
 	t_point		**grid;
-	int			**array;
+	t_fdfval	**array;
 	int			width;
 	int			height;
 }				t_map;
