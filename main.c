@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/12 22:58:54 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/16 20:03:25 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,48 +38,48 @@ t_mlxdata	*getmlxdata(char *name)
 	data->bpp /= 8;
 	return (data);
 }
-void		update(void)
-{
-	t_mlxdata	*data;
-	int			*ptr;
-	int			i;
 
-	i = 0;
-	data = getmlxdata(NULL);
-	ptr = (int *)(data->img);
-	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
-	while (i < data->sizeline * WIN_H / 4)
-		ptr[i++] = 0xFF000000;
+void		draw(t_env env)
+{
+	if (env.drawstyle == WU)
+		draw_map_wu(env);
+	else
+		draw_map_pt(env);
 }
 
-void		draw(t_env	env)
+t_env		initenv(char *str)
 {
-//	draw_grid(env);
-	draw_map(env);
-}
+	t_env		env;
 
-char		*readfile(char *path);
+	env.map = parse(str);
+	env.d.x = WIN_H / (env.map.width + env.map.height);
+	env.d.y = env.d.x;
+	env.dh = 0;
+	env.dhmax = 10;
+	env.rot = env.d.x;
+	env.start = env.map.width * env.d.y;
+	env.drawstyle = POINT;
+	env.colorstyle = NONE;
+	return (env);
+}
 
 int			main(int argc, char **argv)
 {
 	t_mlxdata	*data;
 	t_env		env;
-	char		*str;
 
-	srand(time(NULL));
-	errno = 0;
-	parse(argv[1]);
-//	return (0);
 	if (argc != 2)
-		return (-1);
-	data = getmlxdata(argv[0]);
-	env.map = parse(argv[1]);
-	env.d.x = WIN_H / (env.map.width + env.map.height);
-	env.d.y = env.d.x;
-	env.dh = 0;
-	env.rot = env.d.x;
-	env.startpoint = env.map.width * env.d.y;
+	{
+		ft_putstr("usage: fdf -r | filename\n");
+		return (0);
+	}
+	errno = 0;
+	srand(time(NULL));
+	if (!(data = getmlxdata(argv[0])))
+		exit_error("INIT ERROR\n");
+	env = initenv(argv[1]);
 	mlx_hook(data->win, 2, 2, keyhook, &env);
+	calc_map(env);
 	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	mlx_loop(data->mlx);

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/11 18:07:30 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/11 20:47:14 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/16 20:27:17 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	dtoi_base(char c)
 	return ((ft_isdigit(c)) ? c - '0' : 10 + ft_toupper(c) - 'A');
 }
 
-int		ft_atoi_base(char *str, int base)
+int			ft_atoi_base(char *str, int base)
 {
 	size_t	i;
 	int		sign;

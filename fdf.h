@@ -6,21 +6,40 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/13 20:40:53 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/16 20:24:27 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# define WIN_W 1920.0
+# define WIN_W 1080.0
 # define WIN_H 1080.0
+# define FILE_MAXSIZE 100000000
+
+# define ARROW_UP 0x7e
+# define ARROW_DOWN 0x7d
+# define ARROW_LEFT 0x7b
+# define ARROW_RIGHT 0x7c
+# define NUMPAD_PLUS 0x4e
+# define NUMPAD_MINUS 0x45
+# define KEY_C 0x8
+# define KEY_S 0x1
+
+enum { POINT, QUICK, WU };
+enum { NONE, MAPCOLOR, ALTICOLOR };
 
 typedef struct	s_point
 {
 	double		x;
 	double		y;
 }				t_point;
+
+typedef struct	s_intpoint
+{
+	int			x;
+	int			y;
+}				t_intpoint;
 
 typedef struct	s_line
 {
@@ -77,9 +96,14 @@ typedef struct	s_env
 	t_point		d;
 	double		rot;
 	double		dh;
-	int			startpoint;
+	double		dhmax;
+	int			start;
+	int			drawstyle;
+	int			colorstyle;
+	int			trnsvrsl;
 }				t_env;
 
+void			exit_error(char *str);
 t_map			parse(char *path);
 
 t_mlxdata		*getmlxdata(char *name);
@@ -87,17 +111,23 @@ int				keyhook(int key, void *cetruc);
 
 void			ft_fswap(double *a, double *b);
 
+int				isnumber(char *str);
+char			*nextnum(char *str);
 double			fpart(double n);
 double			rfpart(double n);
 unsigned int	setal(float a, unsigned int rgb);
 t_color			addcolors(t_color a, double r, double g, double b);
 t_color			setcolors(double diff, unsigned int from, unsigned int to);
 
+void			imgputpixel(int x, int y, unsigned int color);
 void			draw(t_env	env);
-void			update(void);
+void			update(t_env env);
 void			drawline(t_point a, t_point b, unsigned int scol,
 															unsigned int ecol);
+void			rawline(t_point a, t_point b, unsigned int color);
 void			draw_grid(t_env map);
-void			draw_map(t_env map);
+void			draw_map_wu(t_env map);
+void			draw_map_pt(t_env map);
+void			calc_map(t_env env);
 
 #endif
