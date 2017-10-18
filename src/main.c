@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 22:17:28 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 22:49:53 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,5 @@ int			main(int argc, char **argv)
 	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	mlx_loop(data->mlx);
-	while (1);
 	return (0);
 }
