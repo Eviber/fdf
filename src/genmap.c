@@ -6,14 +6,15 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/17 17:06:28 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 04:18:31 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 20:17:10 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
-#include "libft/libft.h"
+#include <time.h>
+#include "libft.h"
 #include "fdf.h"
 
 t_fdfval	**randmap(int *w, int *h)
@@ -23,6 +24,7 @@ t_fdfval	**randmap(int *w, int *h)
 	int			i;
 	int			j;
 
+	srand(time(NULL));
 	*w = rand() % 49 + 2;
 	*h = rand() % 49 + 2;
 	array = (t_fdfval **)ft_memalloc(*h * sizeof(t_fdfval *) +

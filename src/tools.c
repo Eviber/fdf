@@ -6,14 +6,14 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 16:02:27 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/17 16:28:16 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 20:15:33 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <math.h>
 #include <errno.h>
-#include "minilibx_macos/mlx.h"
+#include "mlx.h"
 #include "fdf.h"
 #include "libft.h"
 

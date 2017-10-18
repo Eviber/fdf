@@ -6,13 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 05:27:15 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 20:17:02 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <errno.h>
-#include <time.h>
-#include "minilibx_macos/mlx.h"
+#include "mlx.h"
 #include "libft.h"
 #include "fdf.h"
 
@@ -71,7 +70,6 @@ int			main(int argc, char **argv)
 		return (0);
 	}
 	errno = 0;
-	srand(time(NULL));
 	if (!(data = getmlxdata(argv[0])))
 		exit_error("INIT ERROR\n");
 	env = initenv(argv[1]);

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 18:43:36 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 05:04:24 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 20:44:44 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void		drawline(t_env env, t_intpoint i, int nextx, int nexty)
 	{
 		if (env.drawstyle == WU)
 			wuline(px, env.map.grid[nexty][nextx], c1, (env.colorstyle != NONE)
-							? (env.map.array[nexty][nextx]).color : 0x00FFFFFF);
+							? 0x00FFFFFF : (env.map.array[nexty][nextx]).color);
 		if (env.drawstyle == QUICK)
 			rawline(px, env.map.grid[nexty][nextx], 0x00FFFFFF);
 	}

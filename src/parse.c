@@ -6,14 +6,14 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 04:01:53 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 20:15:01 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
-#include "libft/libft.h"
+#include "libft.h"
 #include "fdf.h"
 
 void		getmapsize(char *str, int *w, int *h)
