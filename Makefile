@@ -6,7 +6,7 @@
 #    By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/20 18:17:31 by ygaude            #+#    #+#              #
-#    Updated: 2017/10/18 20:46:27 by ygaude           ###   ########.fr        #
+#    Updated: 2017/10/18 22:16:43 by ygaude           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ all: $(NAME)
 	@$(CC) $(CFLAGS) $(INCL) -c -o $(OBJ_DIR)$@ $^
 
 $(NAME): $(OBJ)
+	@echo "Making libft..."
 	@make -C libft/
 	@echo "Linking..."
 	@$(CC) $(CFLAGS) $(INCL) $(LIBS) $(addprefix $(OBJ_DIR), $(OBJ)) -o $(NAME)

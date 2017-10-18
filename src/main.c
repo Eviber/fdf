@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:17:02 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 22:17:28 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ int			main(int argc, char **argv)
 		return (0);
 	}
 	errno = 0;
+	env = initenv(argv[1]);
 	if (!(data = getmlxdata(argv[0])))
 		exit_error("INIT ERROR\n");
-	env = initenv(argv[1]);
 	mlx_hook(data->win, 2, 2, keyhook, &env);
 	calc_map(env);
 	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
 	mlx_loop(data->mlx);
+	while (1);
 	return (0);
 }

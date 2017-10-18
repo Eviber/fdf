@@ -6,12 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 04:57:02 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 22:20:39 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
-#include "libft.h"
+#include <stdlib.h>
 #include "fdf.h"
 
 void		imgputpixel(int x, int y, unsigned int color)
