@@ -6,13 +6,11 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 21:32:04 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/16 20:05:27 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 05:32:56 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <math.h>
-#include <stdio.h>
 #include "minilibx_macos/mlx.h"
 #include "libft.h"
 #include "fdf.h"
@@ -43,6 +41,25 @@ void	rotate(t_env *env, int key)
 																env->d.y) / 2;
 }
 
+void	modifalti(t_env *env, int key)
+{
+	if (key == NUMPAD_PLUS || key == NUMPAD_MINUS)
+		env->dhmax += (key == NUMPAD_MINUS) ? 0.01 : -0.01;
+	else
+		env->dhmax += (key == KEY_PGUP) ? 0.1 : -0.1;
+	env->dh = env->dhmax * (fabs(env->rot) - env->d.x) / env->d.x;
+}
+
+void	toggle(t_env *env, int key)
+{
+	if (key == KEY_C)
+		env->colorstyle = (env->colorstyle == NONE) ? MAPCOLOR : NONE;
+	else if (key == KEY_S)
+		env->drawstyle = (env->drawstyle == POINT) ? WU : POINT;
+	else
+		env->trnsvrsl = !env->trnsvrsl;
+}
+
 int		keyhook(int key, void *data)
 {
 	t_env		*env;
@@ -50,23 +67,20 @@ int		keyhook(int key, void *data)
 	env = (t_env *)data;
 	if (key == 0x35)
 		exit(0);
-	else if (ARROW_UP == key || key == ARROW_DOWN || key == NUMPAD_PLUS ||
-			key == NUMPAD_MINUS || key == KEY_C || key == KEY_S)
+	if (ARROW_UP == key || key == ARROW_DOWN || key == NUMPAD_PLUS ||
+			key == KEY_PGDWN || key == KEY_PGUP || key == NUMPAD_MINUS ||
+			key == KEY_C || key == KEY_S || key == KEY_T)
 	{
 		if (key == ARROW_UP || key == ARROW_DOWN)
 			rotate(env, key);
-		else if (key == NUMPAD_PLUS || key == NUMPAD_MINUS)
-		{
-			env->dhmax += (key == NUMPAD_MINUS) ? 0.25 : -0.25;
-			env->dh = env->dhmax * (fabs(env->rot) - env->d.x) / env->d.x;
-		}
-		if (key == ARROW_UP || key == ARROW_DOWN ||
-			key == NUMPAD_PLUS || key == NUMPAD_MINUS)
+		else if (key == KEY_PGDWN || key == KEY_PGUP ||
+				key == NUMPAD_PLUS || key == NUMPAD_MINUS)
+			modifalti(env, key);
+		if (key == ARROW_UP || key == ARROW_DOWN || key == KEY_PGDWN ||
+			key == KEY_PGUP || key == NUMPAD_PLUS || key == NUMPAD_MINUS)
 			calc_map(*env);
-		else if (key == KEY_C)
-			env->colorstyle = (env->colorstyle == NONE) ? MAPCOLOR : NONE;
-		else if (key == KEY_S)
-			env->drawstyle = (env->drawstyle == WU) ? POINT : WU;
+		else if (key == KEY_C || key == KEY_S || key == KEY_T)
+			toggle(env, key);
 		update(*env);
 	}
 	return (0);

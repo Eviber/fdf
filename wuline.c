@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 18:41:46 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/16 18:51:39 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/17 18:43:05 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void		ft_uiswap(unsigned int *a, unsigned int *b)
 	*b = c;
 }
 
-void		drawline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
+void		wuline(t_point a, t_point b, unsigned int scol, unsigned int ecol)
 {
 	t_wu	wu;
 

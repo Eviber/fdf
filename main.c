@@ -6,11 +6,10 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/16 20:03:25 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 05:27:15 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <errno.h>
 #include <time.h>
 #include "minilibx_macos/mlx.h"
@@ -41,10 +40,7 @@ t_mlxdata	*getmlxdata(char *name)
 
 void		draw(t_env env)
 {
-	if (env.drawstyle == WU)
-		draw_map_wu(env);
-	else
-		draw_map_pt(env);
+	draw_map(env);
 }
 
 t_env		initenv(char *str)
@@ -55,11 +51,12 @@ t_env		initenv(char *str)
 	env.d.x = WIN_H / (env.map.width + env.map.height);
 	env.d.y = env.d.x;
 	env.dh = 0;
-	env.dhmax = 10;
+	env.dhmax = 1;
 	env.rot = env.d.x;
 	env.start = env.map.width * env.d.y;
-	env.drawstyle = POINT;
+	env.drawstyle = WU;
 	env.colorstyle = NONE;
+	env.trnsvrsl = 0;
 	return (env);
 }
 

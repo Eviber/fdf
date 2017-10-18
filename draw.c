@@ -6,13 +6,11 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/16 19:20:54 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 04:57:02 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <math.h>
-#include "minilibx_macos/mlx.h"
 #include "libft.h"
 #include "fdf.h"
 

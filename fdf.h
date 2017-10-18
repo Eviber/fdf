@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/16 20:24:27 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/18 05:25:05 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 # define NUMPAD_MINUS 0x45
 # define KEY_C 0x8
 # define KEY_S 0x1
+# define KEY_T 0x11
+# define KEY_PGDWN 0x79
+# define KEY_PGUP 0x74
 
 enum { POINT, QUICK, WU };
 enum { NONE, MAPCOLOR, ALTICOLOR };
@@ -106,6 +109,8 @@ typedef struct	s_env
 void			exit_error(char *str);
 t_map			parse(char *path);
 
+char			*readfile(char *path);
+t_fdfval		**randmap(int *w, int *h);
 t_mlxdata		*getmlxdata(char *name);
 int				keyhook(int key, void *cetruc);
 
@@ -122,12 +127,11 @@ t_color			setcolors(double diff, unsigned int from, unsigned int to);
 void			imgputpixel(int x, int y, unsigned int color);
 void			draw(t_env	env);
 void			update(t_env env);
-void			drawline(t_point a, t_point b, unsigned int scol,
+void			wuline(t_point a, t_point b, unsigned int scol,
 															unsigned int ecol);
 void			rawline(t_point a, t_point b, unsigned int color);
 void			draw_grid(t_env map);
-void			draw_map_wu(t_env map);
-void			draw_map_pt(t_env map);
+void			draw_map(t_env env);
 void			calc_map(t_env env);
 
 #endif
