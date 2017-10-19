@@ -1,6 +1,6 @@
 *.a
 *.o
 *.swp
-a.out
+fdf
 test.c
 test_maps/*
