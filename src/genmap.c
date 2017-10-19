@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/17 17:06:28 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:17:10 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/19 04:19:43 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ t_fdfval	**randmap(int *w, int *h)
 	srand(time(NULL));
 	*w = rand() % 49 + 2;
 	*h = rand() % 49 + 2;
-	array = (t_fdfval **)ft_memalloc(*h * sizeof(t_fdfval *) +
-									(*w * *h * sizeof(t_fdfval)));
+	if (!(array = (t_fdfval **)malloc(*h * sizeof(t_fdfval *) +
+									(*w * *h * sizeof(t_fdfval)))))
+		exit_error(strerror(errno));
 	ptr = (t_fdfval *)(array + *h);
 	i = -1;
 	while (++i < *h)

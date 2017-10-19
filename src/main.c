@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 22:49:53 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/19 02:37:02 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ t_env		initenv(char *str)
 	t_env		env;
 
 	env.map = parse(str);
-	env.d.x = WIN_H / (env.map.width + env.map.height);
-	env.d.y = env.d.x;
-	env.dh = 0;
-	env.dhmax = 1;
-	env.rot = env.d.x;
-	env.start = env.map.width * env.d.y;
+	env.d.x = WIN_H / (env.map.width - 1 + env.map.height - 1);
+	env.d.y = env.d.x / 2;
+	env.rot = env.d.x / 2;
+	env.dhmax = 10;
+	env.dh = env.dhmax * (env.rot - env.d.x) / env.d.x;
+	env.start = WIN_H / 2 - ((env.map.height - env.map.width) * env.d.y) / 2;
 	env.drawstyle = WU;
 	env.colorstyle = NONE;
 	env.trnsvrsl = 0;

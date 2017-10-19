@@ -6,7 +6,7 @@
 #    By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/20 18:17:31 by ygaude            #+#    #+#              #
-#    Updated: 2017/10/18 22:16:43 by ygaude           ###   ########.fr        #
+#    Updated: 2017/10/19 01:49:01 by ygaude           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,11 +26,11 @@ OBJ = ${SRC:c=o}
 
 all: $(NAME)
 
-%.o: $(SRC_DIR)%.c
+$(addprefix $(OBJ_DIR), %.o): $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) $(INCL) -c -o $(OBJ_DIR)$@ $^
+	@$(CC) $(CFLAGS) $(INCL) -c -o $@ $^
 
-$(NAME): $(OBJ)
+$(NAME): $(addprefix $(OBJ_DIR), $(OBJ))
 	@echo "Making libft..."
 	@make -C libft/
 	@echo "Linking..."

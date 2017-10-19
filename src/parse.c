@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:15:01 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/10/19 04:15:55 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void		getmapsize(char *str, int *w, int *h)
 			wd++;
 			str = nextnum(str);
 		}
-		if (wd != *w && *w != -1 && !(!(*str) && (*w)))
+		if (wd != *w && *w != -1 && !(!(*str) && !(wd)))
 			exit_error("Map error (line length)");
 		(*h) += (*str || wd);
-		if (*str)
+		if (*w == -1)
 			*w = wd;
 	}
 }
@@ -68,8 +68,9 @@ t_fdfval	**parsemap(char *file, int w, int h)
 	int			i;
 	int			j;
 
-	array = (t_fdfval **)ft_memalloc(h * sizeof(t_fdfval *) +
-									(w * h * sizeof(t_fdfval)));
+	if (!(array = (t_fdfval **)ft_memalloc(h * sizeof(t_fdfval *) +
+									(w * h * sizeof(t_fdfval)))))
+		exit_error(strerror(errno));
 	ptr = (t_fdfval *)(array + h);
 	i = -1;
 	while (++i < h)
@@ -105,8 +106,9 @@ t_map		parse(char *path)
 		map.array = parsemap(file, map.width, map.height);
 		ft_strdel(&file);
 	}
-	map.grid = (t_point **)ft_memalloc(map.height * sizeof(t_point *) +
-				(map.width * map.height * sizeof(t_point)));
+	if (!(map.grid = (t_point **)malloc(map.height * sizeof(t_point *) +
+				(map.width * map.height * sizeof(t_point)))))
+		exit_error(strerror(errno));
 	ptr = (t_point *)(map.grid + map.height);
 	i = -1;
 	while (++i < map.height)
