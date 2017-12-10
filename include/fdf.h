@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 05:25:05 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/12/10 16:48:35 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct	s_env
 	int			drawstyle;
 	int			colorstyle;
 	int			trnsvrsl;
+	int			bg;
 }				t_env;
 
 void			exit_error(char *str);

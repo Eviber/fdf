@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 21:32:04 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:14:12 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/12/10 16:53:46 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,14 @@
 void	update(t_env env)
 {
 	t_mlxdata	*mlxdata;
+	int			*tmp;
+	int			i;
 
 	mlxdata = getmlxdata(NULL);
-	ft_memset(mlxdata->img, 0, mlxdata->sizeline * WIN_H);
+	tmp = (int *)mlxdata->img;
+	i = 0;
+	while (i < WIN_H * WIN_W)
+		tmp[i++] = env.bg;
 	mlx_put_image_to_window(mlxdata->mlx, mlxdata->win, mlxdata->imgptr, 0, 0);
 	draw(env);
 	mlx_put_image_to_window(mlxdata->mlx, mlxdata->win, mlxdata->imgptr, 0, 0);
@@ -67,21 +72,18 @@ int		keyhook(int key, void *data)
 	env = (t_env *)data;
 	if (key == 0x35)
 		exit(0);
-	if (ARROW_UP == key || key == ARROW_DOWN || key == NUMPAD_PLUS ||
-			key == KEY_PGDWN || key == KEY_PGUP || key == NUMPAD_MINUS ||
-			key == KEY_C || key == KEY_S || key == KEY_T)
-	{
-		if (key == ARROW_UP || key == ARROW_DOWN)
-			rotate(env, key);
-		else if (key == KEY_PGDWN || key == KEY_PGUP ||
-				key == NUMPAD_PLUS || key == NUMPAD_MINUS)
-			modifalti(env, key);
-		if (key == ARROW_UP || key == ARROW_DOWN || key == KEY_PGDWN ||
-			key == KEY_PGUP || key == NUMPAD_PLUS || key == NUMPAD_MINUS)
-			calc_map(*env);
-		else if (key == KEY_C || key == KEY_S || key == KEY_T)
-			toggle(env, key);
-		update(*env);
-	}
+	if (key == ARROW_UP || key == ARROW_DOWN)
+		rotate(env, key);
+	else if (key == KEY_PGDWN || key == KEY_PGUP ||
+			key == NUMPAD_PLUS || key == NUMPAD_MINUS)
+		modifalti(env, key);
+	if (key == ARROW_UP || key == ARROW_DOWN || key == KEY_PGDWN ||
+		key == KEY_PGUP || key == NUMPAD_PLUS || key == NUMPAD_MINUS)
+		calc_map(*env);
+	else if (key == KEY_C || key == KEY_S || key == KEY_T)
+		toggle(env, key);
+	else if (key == 0xB)
+		env->bg = ((unsigned)env->bg == 0xF0000000) ? 0 : 0xF0000000;
+	update(*env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 18:43:36 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:44:44 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/12/10 16:38:35 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void		drawline(t_env env, t_intpoint i, int nextx, int nexty)
 	unsigned int	c1;
 
 	px = env.map.grid[i.y][i.x];
-	c1 = (env.colorstyle != NONE) ? 0xFFFFFF : (env.map.array[i.y][i.x]).color;
+	c1 = (env.colorstyle != NONE) ? 0xCCCCCC : (env.map.array[i.y][i.x]).color;
 	if (env.drawstyle != POINT)
 	{
 		if (env.drawstyle == WU)
 			wuline(px, env.map.grid[nexty][nextx], c1, (env.colorstyle != NONE)
-							? 0x00FFFFFF : (env.map.array[nexty][nextx]).color);
+							? 0x00CCCCCC : (env.map.array[nexty][nextx]).color);
 		if (env.drawstyle == QUICK)
-			rawline(px, env.map.grid[nexty][nextx], 0x00FFFFFF);
+			rawline(px, env.map.grid[nexty][nextx], 0x00CCCCCC);
 	}
 	if (env.drawstyle == POINT || env.drawstyle == QUICK)
 		imgputpixel(px.x, px.y, c1);

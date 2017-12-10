@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/19 02:37:02 by ygaude           ###   ########.fr       */
+/*   Updated: 2017/12/10 16:48:38 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,15 @@ t_env		initenv(char *str)
 	env.drawstyle = WU;
 	env.colorstyle = NONE;
 	env.trnsvrsl = 0;
+	env.bg = 0x00000000;
 	return (env);
+}
+
+int			frame(void *env)
+{
+	if (env)
+		update(*(t_env *)env);
+	return (0);
 }
 
 int			main(int argc, char **argv)
@@ -73,7 +81,9 @@ int			main(int argc, char **argv)
 	env = initenv(argv[1]);
 	if (!(data = getmlxdata(argv[0])))
 		exit_error("INIT ERROR\n");
+	update(env);
 	mlx_hook(data->win, 2, 2, keyhook, &env);
+	mlx_loop_hook(data->mlx, frame, &env);
 	calc_map(env);
 	draw(env);
 	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
