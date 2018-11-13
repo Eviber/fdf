@@ -6,25 +6,30 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 22:20:39 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/13 20:56:27 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <SDL.h>
 #include <math.h>
 #include <stdlib.h>
 #include "fdf.h"
 
 void		imgputpixel(int x, int y, unsigned int color)
 {
-	t_mlxdata		*dt;
-	unsigned int	*addr;
+	t_winenv	*env;
+	int			r;
+	int			g;
+	int			b;
+	int			a;
 
-	dt = getmlxdata(NULL);
-	if (0 <= x && x < WIN_W && 0 <= y && y < WIN_H)
-	{
-		addr = (unsigned int *)(dt->img + (dt->sizeline * y) + (x * dt->bpp));
-		*addr = color;
-	}
+	r = color;
+	g = color;
+	b = color;
+	a = color;
+	env = getsdlenv();
+	SDL_SetRenderDrawColor(env->render, r, g, b, a);
+	SDL_RenderDrawPoint(env->render, x, y);
 }
 
 void		rawline(t_point a, t_point b, unsigned int color)

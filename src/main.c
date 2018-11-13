@@ -6,35 +6,48 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2017/12/10 16:48:38 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 00:33:33 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <errno.h>
-#include "mlx.h"
+#include <SDL.h>
 #include "libft.h"
 #include "fdf.h"
 
-t_mlxdata	*getmlxdata(char *name)
+static t_winenv			*sdl_init(char *name)
 {
-	static t_mlxdata	*data = NULL;
+	t_winenv	*w;
 
-	if (data)
-		return (data);
-	data = (t_mlxdata *)malloc(sizeof(t_mlxdata));
-	if (!data)
-		return (NULL);
-	if (!(data->mlx = mlx_init()))
-		return (NULL);
-	if (!(data->win = mlx_new_window(data->mlx, WIN_W, WIN_H, name)))
-		return (NULL);
-	if (!(data->imgptr = mlx_new_image(data->mlx, WIN_W, WIN_H)))
-		return (NULL);
-	if (!(data->img = mlx_get_data_addr(data->imgptr, &(data->bpp),
-										&(data->sizeline), &(data->endian))))
-		return (NULL);
-	data->bpp /= 8;
-	return (data);
+	w = getsdlenv();
+	if (!w || SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
+		panic("Error while initializing SDL: ", SDL_GetError());
+	if (SDL_GetDesktopDisplayMode(0, &(w->dispmode)))
+		panic("SDL_GetDesktopDisplayMode failed: ", SDL_GetError());
+	w->win = SDL_CreateWindow(name,
+				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+				w->dispmode.w, w->dispmode.h, 0*SDL_WINDOW_FULLSCREEN);
+	if (!w->win)
+		panic("Error while creating window: ", SDL_GetError());
+	w->render = SDL_CreateRenderer(w->win, -1, SDL_RENDERER_ACCELERATED);
+	if (!w->render)
+		panic("Error while creating renderer: ", SDL_GetError());
+	return (w);
+}
+
+int			texinit(t_winenv *w)
+{
+	SDL_Texture *tex;
+
+	tex = SDL_CreateTexture(w->render, SDL_PIXELFORMAT_RGBA8888,
+					SDL_TEXTUREACCESS_TARGET, w->dispmode.w, w->dispmode.h);
+	if (!tex)
+		panic("Error while creating tex: ", SDL_GetError());
+	if (TTF_Init() == -1 || !(w->font = TTF_OpenFont("minecraft.ttf", 18)) ||
+							!(w->bigfont = TTF_OpenFont("chargen.ttf", 48)))
+		panic("Error while initializing SDL_TTF: ", TTF_GetError());
+	SDL_RenderClear(w->render);
+	return (1);
 }
 
 void		draw(t_env env)
@@ -60,16 +73,21 @@ t_env		initenv(char *str)
 	return (env);
 }
 
-int			frame(void *env)
+void		loop(t_winenv *win, t_env env)
 {
-	if (env)
-		update(*(t_env *)env);
-	return (0);
+	SDL_Event	event;
+	while (!win->quit)
+	{
+		while (SDL_PollEvent(&event))
+			if (event.type == SDL_KEYDOWN)
+				keyhook(event.key.keysym.scancode, &env);
+		update(env);
+	}
 }
 
 int			main(int argc, char **argv)
 {
-	t_mlxdata	*data;
+	t_winenv	*win;
 	t_env		env;
 
 	if (argc != 2)
@@ -79,14 +97,14 @@ int			main(int argc, char **argv)
 	}
 	errno = 0;
 	env = initenv(argv[1]);
-	if (!(data = getmlxdata(argv[0])))
-		exit_error("INIT ERROR\n");
+	win = sdl_init(argv[0]);
 	update(env);
-	mlx_hook(data->win, 2, 2, keyhook, &env);
-	mlx_loop_hook(data->mlx, frame, &env);
+	//mlx_hook(win->win, 2, 2, keyhook, &env);
+	//mlx_loop_hook(win->mlx, frame, &env);
 	calc_map(env);
 	draw(env);
-	mlx_put_image_to_window(data->mlx, data->win, data->imgptr, 0, 0);
-	mlx_loop(data->mlx);
+	//mlx_put_image_to_window(win->mlx, win->win, win->imgptr, 0, 0);
+	//mlx_loop(win->mlx);
+	loop(win, env);
 	return (0);
 }

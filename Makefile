@@ -6,21 +6,21 @@
 #    By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/20 18:17:31 by ygaude            #+#    #+#              #
-#    Updated: 2017/10/19 01:49:01 by ygaude           ###   ########.fr        #
+#    Updated: 2018/11/14 00:03:10 by ygaude           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror `sdl2-config --cflags`
 SRC_DIR = src/
 LIBFT_DIR = libft/
-INCL =  -I libft/ -I include/ -I minilibx_macos/
-LIBS = libft/libft.a minilibx_macos/libmlx.a -framework OpenGL -framework AppKit
+INCL = -I libft/ -I include/
+LIBS = libft/libft.a `sdl2-config --libs` -lm -lSDL2_ttf
 OBJ_DIR = obj/
 
-SRC = draw.c drawmap.c events.c fdf_math.c genmap.c main.c parse.c tools.c     \
-	  wuline.c
+SRC = draw.c drawmap.c events.c fdf_math.c genmap.c main.c parse.c sdl_tools.c \
+	  tools.c wuline.c
 
 OBJ = ${SRC:c=o}
 
@@ -34,7 +34,7 @@ $(NAME): $(addprefix $(OBJ_DIR), $(OBJ))
 	@echo "Making libft..."
 	@make -C libft/
 	@echo "Linking..."
-	@$(CC) $(CFLAGS) $(INCL) $(LIBS) $(addprefix $(OBJ_DIR), $(OBJ)) -o $(NAME)
+	@$(CC) $(addprefix $(OBJ_DIR), $(OBJ)) -o $(NAME) $(LIBS)
 	@echo "Done !"
 
 clean:

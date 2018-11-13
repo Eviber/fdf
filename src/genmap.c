@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/17 17:06:28 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/19 04:19:43 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/13 21:46:21 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_fdfval	**randmap(int *w, int *h)
 	*h = rand() % 49 + 2;
 	if (!(array = (t_fdfval **)malloc(*h * sizeof(t_fdfval *) +
 									(*w * *h * sizeof(t_fdfval)))))
-		exit_error(strerror(errno));
+		panic(strerror(errno), "\n");
 	ptr = (t_fdfval *)(array + *h);
 	i = -1;
 	while (++i < *h)
@@ -53,11 +53,11 @@ char		*readfile(char *path)
 	str = NULL;
 	fd = open(path, O_RDONLY);
 	if (fd == -1 || !(str = malloc(FILE_MAXSIZE + 1)))
-		exit_error(strerror(errno));
+		panic(strerror(errno), "\n");
 	if ((size = read(fd, str, FILE_MAXSIZE + 1)) == -1)
-		exit_error(strerror(errno));
+		panic(strerror(errno), "\n");
 	if (size > FILE_MAXSIZE)
-		exit_error("File too large");
+		panic("File too large", "\n");
 	str[size] = '\0';
 	return (str);
 }

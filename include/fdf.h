@@ -6,28 +6,19 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2017/12/10 16:48:35 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 00:01:59 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
+# include <SDL.h>
+# include <SDL_ttf.h>
+
 # define WIN_W 1080.0
 # define WIN_H 1080.0
 # define FILE_MAXSIZE 100000000
-
-# define ARROW_UP 0x7e
-# define ARROW_DOWN 0x7d
-# define ARROW_LEFT 0x7b
-# define ARROW_RIGHT 0x7c
-# define NUMPAD_PLUS 0x4e
-# define NUMPAD_MINUS 0x45
-# define KEY_C 0x8
-# define KEY_S 0x1
-# define KEY_T 0x11
-# define KEY_PGDWN 0x79
-# define KEY_PGUP 0x74
 
 enum { POINT, QUICK, WU };
 enum { NONE, MAPCOLOR, ALTICOLOR };
@@ -64,17 +55,6 @@ typedef struct	s_map
 	int			height;
 }				t_map;
 
-typedef struct	s_mlxdata
-{
-	void		*mlx;
-	void		*win;
-	void		*imgptr;
-	char		*img;
-	int			bpp;
-	int			sizeline;
-	int			endian;
-}				t_mlxdata;
-
 typedef struct	s_wu
 {
 	double		gradient;
@@ -107,16 +87,53 @@ typedef struct	s_env
 	int			bg;
 }				t_env;
 
-void			exit_error(char *str);
-t_map			parse(char *path);
+typedef struct		s_winenv
+{
+	SDL_DisplayMode	dispmode;
+	SDL_Window		*win;
+	SDL_Renderer	*render;
+	SDL_Texture		*tex;
+	TTF_Font		*bigfont;
+	TTF_Font		*font;
+	int				quit;
+}					t_winenv;
 
+
+/*
+**	input
+*/
+
+t_map			parse(char *path);
 char			*readfile(char *path);
 t_fdfval		**randmap(int *w, int *h);
-t_mlxdata		*getmlxdata(char *name);
-int				keyhook(int key, void *cetruc);
+
+
+/*
+** Utilities
+*/
+
+void				panic(const char *str, const char *str2);
+SDL_Texture			*strtotex(char *str, t_winenv env, TTF_Font *f);
+t_winenv			*getsdlenv(void);
+double				dist(double x1, double y1, double x2, double y2);
+int					quitvisu(t_winenv *env);
+
+
+/*
+** basic drawing
+*/
+
+void			imgputpixel(int x, int y, unsigned int color);
+void			draw(t_env	env);
+void			update(t_env env);
+void			wuline(t_point a, t_point b, unsigned int scol, unsigned int ecol);
+
+
+/*
+**	xiaoling wu
+*/
 
 void			ft_fswap(double *a, double *b);
-
 int				isnumber(char *str);
 char			*nextnum(char *str);
 double			fpart(double n);
@@ -125,11 +142,18 @@ unsigned int	setal(float a, unsigned int rgb);
 t_color			addcolors(t_color a, double r, double g, double b);
 t_color			setcolors(double diff, unsigned int from, unsigned int to);
 
-void			imgputpixel(int x, int y, unsigned int color);
-void			draw(t_env	env);
-void			update(t_env env);
-void			wuline(t_point a, t_point b, unsigned int scol,
-															unsigned int ecol);
+
+/*
+**	tools
+*/
+
+int				keyhook(int key, t_env *env);
+
+
+/*
+**	drawing
+*/
+
 void			rawline(t_point a, t_point b, unsigned int color);
 void			draw_grid(t_env map);
 void			draw_map(t_env env);

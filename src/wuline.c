@@ -6,13 +6,12 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 18:41:46 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:15:31 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/13 19:09:03 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <math.h>
-#include "mlx.h"
 #include "libft.h"
 #include "fdf.h"
 

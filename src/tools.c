@@ -6,14 +6,13 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 16:02:27 by ygaude            #+#    #+#             */
-/*   Updated: 2017/10/18 20:15:33 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/13 19:22:17 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <math.h>
 #include <errno.h>
-#include "mlx.h"
 #include "fdf.h"
 #include "libft.h"
 
@@ -40,10 +39,4 @@ char			*nextnum(char *str)
 	while (ft_isspace(*str) && *str != '\n')
 		str++;
 	return (str);
-}
-
-void			exit_error(char *str)
-{
-	ft_putendl_fd(str, 2);
-	exit(errno);
 }
