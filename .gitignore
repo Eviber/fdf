@@ -1,6 +1,7 @@
 *.a
 *.o
 *.swp
+tags
 fdf
 test.c
 test_maps/*
