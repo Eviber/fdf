@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/14 00:33:33 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 02:32:23 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_env		initenv(char *str)
 	env.drawstyle = WU;
 	env.colorstyle = NONE;
 	env.trnsvrsl = 0;
-	env.bg = 0x00000000;
+	env.bg = 255;
 	return (env);
 }
 

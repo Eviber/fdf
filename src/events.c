@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 21:32:04 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/14 00:28:59 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 02:31:32 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ void	update(t_env env)
 	t_winenv	*winenv;
 
 	winenv = getsdlenv();
+	SDL_SetRenderDrawBlendMode(winenv->render, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderTarget(winenv->render, winenv->tex);
-	SDL_SetRenderDrawColor(winenv->render, 0, 0, 0, 255);
-	SDL_RenderClear(winenv->render);
+	SDL_SetRenderDrawColor(winenv->render, 0, 0, 0, env.bg);
+	//SDL_RenderClear(winenv->render);
+	SDL_RenderFillRect(winenv->render, NULL);
 	draw(env);
 	SDL_SetRenderTarget(winenv->render, NULL);
 	SDL_RenderCopy(winenv->render, winenv->tex, NULL, NULL);
@@ -76,8 +78,8 @@ int		keyhook(int key, t_env *env)
 		calc_map(*env);
 	else if (key == SDL_SCANCODE_C || key == SDL_SCANCODE_S || key == SDL_SCANCODE_T)
 		toggle(env, key);
-	else if (key == 0xB)
-		env->bg = ((unsigned)env->bg == 0xF0000000) ? 0 : 0xF0000000;
+	else if (key == SDL_SCANCODE_B)
+		env->bg = ((unsigned)env->bg == 30) ? 255 : 30;
 	if (key == SDL_SCANCODE_ESCAPE || SDL_QuitRequested())
 		exit(0);
 	update(*env);

@@ -6,12 +6,12 @@
 #    By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/20 18:17:31 by ygaude            #+#    #+#              #
-#    Updated: 2018/11/14 00:03:10 by ygaude           ###   ########.fr        #
+#    Updated: 2018/11/14 03:25:04 by ygaude           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-CC = gcc
+CC = gcc -g
 CFLAGS = -Wall -Wextra -Werror `sdl2-config --cflags`
 SRC_DIR = src/
 LIBFT_DIR = libft/

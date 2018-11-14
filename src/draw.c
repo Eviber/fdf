@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/27 22:30:11 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/13 20:56:27 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 02:10:10 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void		imgputpixel(int x, int y, unsigned int color)
 	int			b;
 	int			a;
 
-	r = color;
-	g = color;
-	b = color;
-	a = color;
+	a = 255 - (int)((color >> 24) & 0xFF);
+	r = (int)((color >> 16) & 0xFF);
+	g = (int)((color >> 8) & 0xFF);
+	b = (int)(color & 0xFF);
 	env = getsdlenv();
 	SDL_SetRenderDrawColor(env->render, r, g, b, a);
 	SDL_RenderDrawPoint(env->render, x, y);

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/13 21:51:13 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 04:06:03 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,75 @@ t_fdfval	**parsemap(char *file, int w, int h)
 	return (array);
 }
 
+int			setval(int x, int y, int n, int max)
+{
+	if (max)
+	{
+		printf("%d ", n / max);
+		return (round((double)x + ((double)(y - x) * (double)n / (double)max)));
+	}
+	return ((double)(x + y) / 2.0);
+}
+
+int			blend(int cx, int cy, int n, int max)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	r = setval((cx >> 16) & 0xFF, (cy >> 16) & 0xFF, n, max);
+	g = setval((cx >> 8) & 0xFF, (cy >> 8) & 0xFF, n, max);
+	b = setval(cx & 0xFF, cy & 0xFF, n, max);
+	return (r << 16 | g << 8 | b);
+}
+
+void		setcolor(t_fdfval **array, int w, int h)
+{
+	int		i;
+	int		j;
+	int		max;
+	int		min;
+
+	max = array[0][0].alti;
+	min = max;
+	i = 0;
+	while (i < h)
+	{
+		j = 0;
+		while (j < w)
+		{
+			if (array[i][j].alti > max)
+				max = array[i][j].alti;
+			else if (array[i][j].alti < min)
+				min = array[i][j].alti;
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < h)
+	{
+		j = 0;
+		while (j < w)
+		{
+			if (array[i][j].alti == 0)
+				array[i][j].color = 0x8080FF;
+			else if (array[i][j].alti == max && max > 0)
+				array[i][j].color = 0xFFFFFF;
+			else if (array[i][j].alti == min && min < 0)
+				array[i][j].color = 0x0000FF;
+			else if (array[i][j].alti > 0)
+				array[i][j].color = blend(0x00AA00, 0xFFFFFF, array[i][j].alti - 0, max - 0);
+			else
+				array[i][j].color = blend(0x0000FF, 0x8080FF, array[i][j].alti - min, 0 - min);
+			//printf("%d ", array[i][j].color);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
+
 t_map		parse(char *path)
 {
 	t_map	map;
@@ -106,6 +175,7 @@ t_map		parse(char *path)
 		map.array = parsemap(file, map.width, map.height);
 		ft_strdel(&file);
 	}
+	setcolor(map.array, map.width, map.height);
 	if (!(map.grid = (t_point **)malloc(map.height * sizeof(t_point *) +
 				(map.width * map.height * sizeof(t_point)))))
 		panic(strerror(errno), "\n");
