@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/14 04:06:03 by ygaude           ###   ########.fr       */
+/*   Updated: 2018/11/14 04:58:01 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,23 +135,32 @@ void		setcolor(t_fdfval **array, int w, int h)
 		}
 		i++;
 	}
+	double	step;
+	int		colors[7];
+	int		k;
+
+	step = round((double)(max - min) / 7.0);
+	colors[0] = 0x505050;
+	colors[1] = 0x40E0D0;
+	colors[2] = 0x00FF7F;
+	colors[3] = 0xFFFF00;
+	colors[4] = 0xFF0000;
+	colors[5] = 0xFD6C9E;
+	colors[6] = 0xFFFFFF;
 	i = 0;
 	while (i < h)
 	{
 		j = 0;
 		while (j < w)
 		{
-			if (array[i][j].alti == 0)
-				array[i][j].color = 0x8080FF;
-			else if (array[i][j].alti == max && max > 0)
-				array[i][j].color = 0xFFFFFF;
-			else if (array[i][j].alti == min && min < 0)
-				array[i][j].color = 0x0000FF;
-			else if (array[i][j].alti > 0)
-				array[i][j].color = blend(0x00AA00, 0xFFFFFF, array[i][j].alti - 0, max - 0);
-			else
-				array[i][j].color = blend(0x0000FF, 0x8080FF, array[i][j].alti - min, 0 - min);
-			//printf("%d ", array[i][j].color);
+			k = 0;
+			while (k < 6)
+			{
+				if (array[i][j].alti >= round(min + step * k) && array[i][j].alti <= round(min + step * (k + 1)))
+					array[i][j].color = blend(colors[k], colors[k + 1], array[i][j].alti - round(min + step * k), step);
+				k++;
+				//printf("%d ", array[i][j].color);
+			}
 			j++;
 		}
 		printf("\n");
