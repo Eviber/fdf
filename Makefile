@@ -6,7 +6,7 @@
 #    By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/20 18:17:31 by ygaude            #+#    #+#              #
-#    Updated: 2018/11/14 03:25:04 by ygaude           ###   ########.fr        #
+#    Updated: 2019/05/27 20:48:03 by ygaude           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ LIBS = libft/libft.a `sdl2-config --libs` -lm -lSDL2_ttf
 OBJ_DIR = obj/
 
 SRC = draw.c drawmap.c events.c fdf_math.c genmap.c main.c parse.c sdl_tools.c \
-	  tools.c wuline.c
+	  tools.c wuline.c open-simplex-noise.c
 
 OBJ = ${SRC:c=o}
 

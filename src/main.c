@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 20:07:13 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/27 21:24:26 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_env		initenv(char *str)
 	env.d.x = WIN_H / (env.map.width - 1 + env.map.height - 1);
 	env.d.y = env.d.x / 2;
 	env.rot = env.d.x / 2;
-	env.dhmax = 10;
+	env.dhmax = 1;
 	env.dh = env.dhmax * (env.rot - env.d.x) / env.d.x;
 	env.start = WIN_H / 2 - ((env.map.height - env.map.width) * env.d.y) / 2;
 	env.drawstyle = WU;
@@ -85,7 +85,6 @@ void		loop(t_winenv *win, t_env env)
 		cur = SDL_GetTicks();
 		env.dt = (cur - last) / 1000.;
 		last = cur;
-		printf("%f\n", 1./env.dt);
 		while (SDL_PollEvent(&event))
 			if (event.type == SDL_KEYDOWN)
 				keyhook(event.key.keysym.scancode, &env);
