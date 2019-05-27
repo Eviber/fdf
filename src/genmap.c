@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/17 17:06:28 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 21:25:59 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/27 21:51:23 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "fdf.h"
 #include "open-simplex-noise.h"
 
-#define FEATURE_SIZE 24
+#define FEATURE_SIZE 50
 
 int			getVal(struct osn_context *ctx, int x, int y)
 {
@@ -31,7 +31,7 @@ int			getVal(struct osn_context *ctx, int x, int y)
 	v1 = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 2, (double) y / FEATURE_SIZE / 2);
 	v2 = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 1, (double) y / FEATURE_SIZE / 1);
 	value = v0 * 4 / 7.0 + v1 * 2 / 7.0 + v2 * 1 / 7.0;
-	return ((int)lround(value * 100));
+	return ((int)lround(value * 300));
 }
 
 t_fdfval	**randmap(int *w, int *h)
@@ -58,7 +58,7 @@ t_fdfval	**randmap(int *w, int *h)
 		while (++j < *w)
 		{
 			(array[i][j]).alti = getVal(ctx, i, j);
-			(array[i][j]).color = 0xFFFFFF;
+			(array[i][j]).color = rand() % 0x1000000;
 		}
 	return (array);
 }

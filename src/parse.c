@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 21:20:33 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/27 21:47:57 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ int			setval(int x, int y, int n, int max)
 {
 	if (max)
 	{
-		printf("%d ", n / max);
 		return (round((double)x + ((double)(y - x) * (double)n / (double)max)));
 	}
 	return ((double)(x + y) / 2.0);
@@ -154,16 +153,15 @@ void		setcolor(t_fdfval **array, int w, int h)
 		while (j < w)
 		{
 			k = 0;
+			array[i][j].color = colors[6];
 			while (k < 6)
 			{
 				if (array[i][j].alti >= round(min + step * k) && array[i][j].alti <= round(min + step * (k + 1)))
 					array[i][j].color = blend(colors[k], colors[k + 1], array[i][j].alti - round(min + step * k), step);
 				k++;
-				//printf("%d ", array[i][j].color);
 			}
 			j++;
 		}
-		printf("\n");
 		i++;
 	}
 }
