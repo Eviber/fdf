@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/14 02:32:23 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/27 20:07:13 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,21 @@ t_env		initenv(char *str)
 
 void		loop(t_winenv *win, t_env env)
 {
-	SDL_Event	event;
+	SDL_Event		event;
+	unsigned int	last;
+	unsigned int	cur;
+
+	last = SDL_GetTicks();
 	while (!win->quit)
 	{
+		cur = SDL_GetTicks();
+		env.dt = (cur - last) / 1000.;
+		last = cur;
+		printf("%f\n", 1./env.dt);
 		while (SDL_PollEvent(&event))
 			if (event.type == SDL_KEYDOWN)
 				keyhook(event.key.keysym.scancode, &env);
+		keyhook(0, &env);
 		update(env);
 	}
 }

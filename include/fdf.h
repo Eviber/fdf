@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/14 00:01:59 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/27 19:32:48 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct	s_env
 	double		rot;
 	double		dh;
 	double		dhmax;
+	double		dt;
 	int			start;
 	int			drawstyle;
 	int			colorstyle;
