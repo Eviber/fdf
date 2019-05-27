@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/25 18:36:20 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 21:24:26 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/28 00:58:56 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ void		loop(t_winenv *win, t_env env)
 	{
 		cur = SDL_GetTicks();
 		env.dt = (cur - last) / 1000.;
+		while (env.dt < 1./60.)
+		{
+			cur = SDL_GetTicks();
+			env.dt = (cur - last) / 1000.;
+		}
 		last = cur;
 		while (SDL_PollEvent(&event))
 			if (event.type == SDL_KEYDOWN)

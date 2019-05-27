@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 21:47:57 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/28 00:56:17 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,24 +90,20 @@ t_fdfval	**parsemap(char *file, int w, int h)
 	return (array);
 }
 
-int			setval(int x, int y, int n, int max)
+int			setval(int x, int y, double ratio)
 {
-	if (max)
-	{
-		return (round((double)x + ((double)(y - x) * (double)n / (double)max)));
-	}
-	return ((double)(x + y) / 2.0);
+	return (round((double)x + ((double)(y - x) * ratio)));
 }
 
-int			blend(int cx, int cy, int n, int max)
+int			blend(int cx, int cy, double ratio)
 {
 	int	r;
 	int	g;
 	int	b;
 
-	r = setval((cx >> 16) & 0xFF, (cy >> 16) & 0xFF, n, max);
-	g = setval((cx >> 8) & 0xFF, (cy >> 8) & 0xFF, n, max);
-	b = setval(cx & 0xFF, cy & 0xFF, n, max);
+	r = setval((cx >> 16) & 0xFF, (cy >> 16) & 0xFF, ratio);
+	g = setval((cx >> 8) & 0xFF, (cy >> 8) & 0xFF, ratio);
+	b = setval(cx & 0xFF, cy & 0xFF, ratio);
 	return (r << 16 | g << 8 | b);
 }
 
@@ -134,32 +130,27 @@ void		setcolor(t_fdfval **array, int w, int h)
 		}
 		i++;
 	}
-	double	step;
-	int		colors[7];
-	int		k;
+	int		colors[4];
+	double	alti;
 
-	step = round((double)(max - min) / 7.0);
-	colors[0] = 0x505050;
-	colors[1] = 0x40E0D0;
-	colors[2] = 0x00FF7F;
-	colors[3] = 0xFFFF00;
-	colors[4] = 0xFF0000;
-	colors[5] = 0xFD6C9E;
-	colors[6] = 0xFFFFFF;
+	colors[0] = 0x0a4f01;
+	colors[1] = 0xf6ff46;
+	colors[2] = 0x760600;
+	colors[3] = 0xf0dfd7;
 	i = 0;
 	while (i < h)
 	{
 		j = 0;
 		while (j < w)
 		{
-			k = 0;
-			array[i][j].color = colors[6];
-			while (k < 6)
-			{
-				if (array[i][j].alti >= round(min + step * k) && array[i][j].alti <= round(min + step * (k + 1)))
-					array[i][j].color = blend(colors[k], colors[k + 1], array[i][j].alti - round(min + step * k), step);
-				k++;
-			}
+			alti = (double)(array[i][j].alti - min) / (double)(max - min);
+			if (alti < 37./74.)
+				array[i][j].color = blend(colors[0], colors[1], alti / (37./74.));
+			else if (alti < 65./74.)
+				array[i][j].color = blend(colors[1], colors[2], (alti - (37./74.)) / ((65./74.) - (37./74.)));
+			else
+				array[i][j].color = blend(colors[2], colors[3], (alti - (65./74.)) / (1 - (65./74.)));
+			array[i][j].color = blend(0x0000cc, 0xffffff, alti);
 			j++;
 		}
 		i++;
