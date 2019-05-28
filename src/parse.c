@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/28 00:56:17 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/28 16:25:48 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void		setcolor(t_fdfval **array, int w, int h)
 		}
 		i++;
 	}
+	printf("%d\n", min);
 	int		colors[4];
 	double	alti;
 
@@ -150,7 +151,11 @@ void		setcolor(t_fdfval **array, int w, int h)
 				array[i][j].color = blend(colors[1], colors[2], (alti - (37./74.)) / ((65./74.) - (37./74.)));
 			else
 				array[i][j].color = blend(colors[2], colors[3], (alti - (65./74.)) / (1 - (65./74.)));
-			array[i][j].color = blend(0x0000cc, 0xffffff, alti);
+			array[i][j].color = blend(0x00cc00, 0xffffff, (double)(array[i][j].alti) / (double)(max));
+			if (array[i][j].alti <= 0)
+			{
+				array[i][j].color = blend(0x000055, 0x6666dd, (double)(array[i][j].alti - min) / (double)(-min));
+			}
 			j++;
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/17 17:06:28 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 21:51:23 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/05/28 16:02:45 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,20 @@
 
 int			getVal(struct osn_context *ctx, int x, int y)
 {
+	double va;
+	double vb;
 	double v0;
 	double v1;
 	double v2;
 	double value;
 
+	va = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE /16, (double) y / FEATURE_SIZE /16);
+	vb = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 8, (double) y / FEATURE_SIZE / 8);
 	v0 = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 4, (double) y / FEATURE_SIZE / 4);
 	v1 = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 2, (double) y / FEATURE_SIZE / 2);
 	v2 = open_simplex_noise2(ctx, (double) x / FEATURE_SIZE / 1, (double) y / FEATURE_SIZE / 1);
-	value = v0 * 4 / 7.0 + v1 * 2 / 7.0 + v2 * 1 / 7.0;
-	return ((int)lround(value * 300));
+	value = va * 16 / 7.0 + vb * 8 / 7.0 + v0 * 4 / 7.0 + v1 * 2 / 7.0 + v2 * 1 / 7.0;
+	return ((int)lround(value * 200));
 }
 
 t_fdfval	**randmap(int *w, int *h)
