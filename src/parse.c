@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 21:47:48 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/28 16:25:48 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/08/26 18:20:08 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void		getmapsize(char *str, int *w, int *h)
 			str++;
 		while (*str && *str != '\n')
 		{
-			if (!isnumber(str))
+			if (!fdf_isnumber(str))
 				panic("Parse error", "\n");
 			wd++;
 			str = nextnum(str);

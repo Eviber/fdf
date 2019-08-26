@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 16:02:27 by ygaude            #+#    #+#             */
-/*   Updated: 2018/11/13 19:22:17 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/08/26 18:19:24 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "fdf.h"
 #include "libft.h"
 
-int				isnumber(char *str)
+int				fdf_isnumber(char *str)
 {
 	while (ft_isspace(*str) && *str != '\n')
 		str++;

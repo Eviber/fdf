@@ -6,7 +6,7 @@
 /*   By: ygaude <ygaude@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 14:56:33 by ygaude            #+#    #+#             */
-/*   Updated: 2019/05/27 19:32:48 by ygaude           ###   ########.fr       */
+/*   Updated: 2019/08/26 18:19:38 by ygaude           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void			wuline(t_point a, t_point b, unsigned int scol, unsigned int ecol);
 */
 
 void			ft_fswap(double *a, double *b);
-int				isnumber(char *str);
+int				fdf_isnumber(char *str);
 char			*nextnum(char *str);
 double			fpart(double n);
 double			rfpart(double n);
